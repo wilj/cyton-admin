@@ -24,13 +24,16 @@
     "classnames": "2.2.6",
     "cyton-react": "file:../cyton-react",
     "faker": "4.1.0",
+    "graphql": "^15.3.0",
+    "graphql-tag": "^2.11.0",
     "react": "^16.13.1",
     "react-chartjs-2": "2.9.0",
     "react-dom": "^16.13.1",
     "react-focus-lock": "2.4.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "3.4.1",
-    "react-transition-group": "4.4.1"
+    "react-transition-group": "4.4.1",
+    "urql": "^1.10.1"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "1.1.4",
