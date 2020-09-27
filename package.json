@@ -1,30 +1,77 @@
 {
   "name": "cyton-admin",
-  "version": "0.1.0",
+  "version": "0.0.1",
+  "description": "A multi theme, completely accessible, with components and pages examples, (almost) ready for production dashboard.",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "^24.0.0",
-    "@types/node": "^12.0.0",
-    "@types/react": "^16.9.0",
-    "@types/react-dom": "^16.9.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3",
-    "typescript": "~3.7.2",
-    "cyton-react": "wilj/cyton-react#master"
-  },
   "scripts": {
-  "build:tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
-  "prestart": "npm run build:tailwind",
-  "prebuild": "npm run build:tailwind",
-  "start": "react-scripts start",
-  "build": "react-scripts build",
-  "test": "react-scripts test",
-  "eject": "react-scripts eject"
-},:
+    "tailwind:dev": "tailwindcss build src/assets/css/tailwind.css -o src/assets/css/tailwind.output.css",
+    "tailwind:build": "cross-env NODE_ENV=production postcss src/assets/css/tailwind.css -o src/assets/css/tailwind.output.css",
+    "prestart": "npm run tailwind:dev",
+    "start": "react-scripts start",
+    "prebuild": "npm run tailwind:build",
+    "build": "react-scripts build",
+    "cz": "git-cz",
+    "release": "release-it",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "4.2.4",
+    "@testing-library/react": "9.5.0",
+    "@testing-library/user-event": "7.2.1",
+    "@windmill/react-ui": "0.3.1",
+    "chart.js": "2.9.3",
+    "classnames": "2.2.6",
+    "cyton-react": "file:../cyton-react",
+    "faker": "4.1.0",
+    "react": "^16.13.1",
+    "react-chartjs-2": "2.9.0",
+    "react-dom": "^16.13.1",
+    "react-focus-lock": "2.4.0",
+    "react-router-dom": "5.2.0",
+    "react-scripts": "3.4.1",
+    "react-transition-group": "4.4.1"
+  },
+  "devDependencies": {
+    "@release-it/conventional-changelog": "1.1.4",
+    "@svgr/webpack": "5.4.0",
+    "autoprefixer": "9.8.0",
+    "commitizen": "4.1.2",
+    "cross-env": "7.0.2",
+    "cssnano": "4.1.10",
+    "cz-conventional-changelog": "3.2.0",
+    "postcss-cli": "7.1.1",
+    "react-axe": "3.5.2",
+    "release-it": "13.6.4",
+    "tailwindcss": "1.4.6",
+    "typescript": "~3.7.2"
+  },
+  "keywords": [
+    "windmill",
+    "dashboard",
+    "admin",
+    "tailwind",
+    "react"
+  ],
+  "release-it": {
+    "github": {
+      "release": true
+    },
+    "npm": {
+      "publish": false
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular",
+        "infile": "CHANGELOG.md"
+      }
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -39,8 +86,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "tailwindcss": "^1.8.10"
   }
 }
