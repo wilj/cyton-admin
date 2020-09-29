@@ -6,6 +6,7 @@ import { SidebarProvider } from './context/SidebarContext'
 import ThemedSuspense from './components/ThemedSuspense'
 import { Windmill } from '@windmill/react-ui'
 import * as serviceWorker from './serviceWorker'
+import { AuthProvider} from 'cyton-react'
 
 // if (process.env.NODE_ENV !== 'production') {
 //   const axe = require('react-axe')
@@ -13,13 +14,15 @@ import * as serviceWorker from './serviceWorker'
 // }
 
 ReactDOM.render(
-  <SidebarProvider>
-    <Suspense fallback={<ThemedSuspense />}>
-      <Windmill usePreferences>
-        <App />
-      </Windmill>
-    </Suspense>
-  </SidebarProvider>,
+  <AuthProvider baseDomain="cyton.biz" realm="cyton">
+    <SidebarProvider>
+      <Suspense fallback={<ThemedSuspense />}>
+        <Windmill usePreferences>
+          <App />
+        </Windmill>
+      </Suspense>
+    </SidebarProvider>
+  </AuthProvider>,
   document.getElementById('root')
 )
 

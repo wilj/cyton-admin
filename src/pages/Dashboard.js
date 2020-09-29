@@ -1,35 +1,24 @@
-import React, { useState, useEffect } from 'react'
-
-import CTA from '../components/CTA'
-import InfoCard from '../components/Cards/InfoCard'
-import ChartCard from '../components/Chart/ChartCard'
-import { Doughnut, Line } from 'react-chartjs-2'
-import ChartLegend from '../components/Chart/ChartLegend'
-import PageTitle from '../components/Typography/PageTitle'
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '../icons'
-import RoundIcon from '../components/RoundIcon'
 import {
-  TableBody,
-  TableContainer,
-  Table,
-  TableHeader,
-  TableCell,
-  TableRow,
-  TableFooter,
-  Avatar,
-  Badge,
-  Pagination,
+  Pagination, Table, TableBody,
+
+
+
+  TableCell, TableContainer,
+
+
+
+
+  TableFooter, TableHeader,
+
+  TableRow
 } from '@windmill/react-ui'
-
-import {
-  doughnutOptions,
-  lineOptions,
-  doughnutLegends,
-  lineLegends,
-} from '../utils/demo/chartsData'
-
-import {useQuery, initClient} from 'urql'
 import gql from 'graphql-tag'
+import React, { useEffect, useState } from 'react'
+import { useQuery } from 'urql'
+import PageTitle from '../components/Typography/PageTitle'
+
+
+
 
 // initClient({url})
 
@@ -51,6 +40,7 @@ function Dashboard() {
 
   const response = data?.migrations?.nodes || []
 
+  console.log(`migrations response`, response)
   
   // pagination setup
   const resultsPerPage = 10
@@ -65,7 +55,7 @@ function Dashboard() {
   // here you would make another server request for new data
   useEffect(() => {
     setMigrations(response.slice((page - 1) * resultsPerPage, page * resultsPerPage))
-  }, [page])
+  }, [page, response.length])
 
   if (error) {
     return <div>{JSON.stringify(error)}</div>
