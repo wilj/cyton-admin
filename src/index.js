@@ -14,7 +14,7 @@ import { AuthProvider} from 'cyton-react'
 // }
 
 ReactDOM.render(
-  <AuthProvider baseDomain="cyton.biz" realm="cyton">
+  <AuthProvider baseDomain="cyton.biz" realm="cyton" clientId="cyton-dev" apiDomain="admin.cyton.biz">
     <SidebarProvider>
       <Suspense fallback={<ThemedSuspense />}>
         <Windmill usePreferences>
