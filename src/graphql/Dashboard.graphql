@@ -1,0 +1,8 @@
+query Dashboard {
+    migrations(orderBy: CREATED_TS_ASC) {
+        nodes {
+            name
+            createdTs
+        }
+    }
+}

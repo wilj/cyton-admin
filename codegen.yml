@@ -1,0 +1,17 @@
+overwrite: true
+schema: "https://admin.cyton.biz/graphql"
+documents: "src/**/*.graphql"
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-urql"
+    config:
+      withHooks: true
+  src/generated/schema.json:
+    plugins:
+      - "introspection"
+  src/generated/schema.graphql:
+    plugins:
+      - "schema-ast"

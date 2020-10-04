@@ -1,22 +1,13 @@
 import {
   Pagination, Table, TableBody,
-
-
-
   TableCell, TableContainer,
-
-
-
-
   TableFooter, TableHeader,
-
   TableRow
 } from '@windmill/react-ui'
-import gql from 'graphql-tag'
 import React, { useEffect, useState } from 'react'
-import { useQuery } from 'urql'
 import PageTitle from '../components/Typography/PageTitle'
 
+import {useDashboardQuery} from '../generated/graphql'
 
 
 
@@ -26,16 +17,8 @@ function Dashboard() {
   const [page, setPage] = useState(1)
   const [migrations, setMigrations] = useState([])
 
-  const [result, rexecuteQuery] = useQuery({query: gql`
-    query DashboardQuery {
-      migrations(orderBy: CREATED_TS_ASC) {
-        nodes {
-          name
-          createdTs
-        }
-      }
-    }
-  `})
+  const [result] = useDashboardQuery()
+  
   const {data, fetching, error} = result
 
   const response = data?.migrations?.nodes || []
@@ -57,6 +40,9 @@ function Dashboard() {
     setMigrations(response.slice((page - 1) * resultsPerPage, page * resultsPerPage))
   }, [page, response.length])
 
+  if (fetching) {
+    return <div>...</div>
+  }
   if (error) {
     return <div>{JSON.stringify(error)}</div>
   }

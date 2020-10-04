@@ -13,7 +13,8 @@
     "cz": "git-cz",
     "release": "release-it",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@testing-library/jest-dom": "4.2.4",
@@ -22,10 +23,7 @@
     "@windmill/react-ui": "0.3.1",
     "chart.js": "2.9.3",
     "classnames": "2.2.6",
-    "cyton-react": "file:../cyton-react",
     "faker": "4.1.0",
-    "graphql": "^15.3.0",
-    "graphql-tag": "^2.11.0",
     "react": "^16.13.1",
     "react-chartjs-2": "2.9.0",
     "react-dom": "^16.13.1",
@@ -33,9 +31,21 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "3.4.1",
     "react-transition-group": "4.4.1",
+    "cyton-react": "wilj/cyton-react#master",
+    "@react-keycloak/web": "^2.1.4",
+    "graphql": "^15.3.0",
+    "graphql-tag": "^2.11.0",
+    "keycloak-js": "^11.0.2",
+    "subscriptions-transport-ws": "^0.9.18",
     "urql": "^1.10.1"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.13.3",
+    "@graphql-codegen/introspection": "1.13.3",
+    "@graphql-codegen/schema-ast": "^1.13.3",
+    "@graphql-codegen/typescript": "1.13.3",
+    "@graphql-codegen/typescript-operations": "1.13.3",
+    "@graphql-codegen/typescript-urql": "^1.13.3",
     "@release-it/conventional-changelog": "1.1.4",
     "@svgr/webpack": "5.4.0",
     "autoprefixer": "9.8.0",
