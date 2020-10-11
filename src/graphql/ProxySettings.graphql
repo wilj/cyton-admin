@@ -1,0 +1,10 @@
+query ProxySettings {
+  proxyRoutes {
+    nodes {
+      id
+      externalHostName
+      internalHostName
+      internalPort
+    }
+  }
+}

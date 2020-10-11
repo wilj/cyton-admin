@@ -1,5 +1,5 @@
 overwrite: true
-schema: "https://admin.cyton.biz/graphql"
+schema: "https://admin.home.cyton.org/graphql"
 documents: "src/**/*.graphql"
 generates:
   src/generated/graphql.tsx:

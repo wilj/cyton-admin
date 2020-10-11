@@ -29,12 +29,14 @@ export type Query = Node & {
   node?: Maybe<Node>;
   /** Reads and enables pagination through a set of `Migration`. */
   migrations?: Maybe<MigrationsConnection>;
+  /** Reads and enables pagination through a set of `ProxyRoute`. */
+  proxyRoutes?: Maybe<ProxyRoutesConnection>;
   /** Reads and enables pagination through a set of `UserSession`. */
   userSessions?: Maybe<UserSessionsConnection>;
-  migration?: Maybe<Migration>;
-  migrationByName?: Maybe<Migration>;
-  /** Reads a single `Migration` using its globally unique `ID`. */
-  migrationByNodeId?: Maybe<Migration>;
+  proxyRoute?: Maybe<ProxyRoute>;
+  proxyRouteByExternalHostName?: Maybe<ProxyRoute>;
+  /** Reads a single `ProxyRoute` using its globally unique `ID`. */
+  proxyRouteByNodeId?: Maybe<ProxyRoute>;
 };
 
 
@@ -57,6 +59,18 @@ export type QueryMigrationsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryProxyRoutesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ProxyRoutesOrderBy>>;
+  condition?: Maybe<ProxyRouteCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryUserSessionsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -69,19 +83,19 @@ export type QueryUserSessionsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryMigrationArgs = {
+export type QueryProxyRouteArgs = {
   id: Scalars['Int'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryMigrationByNameArgs = {
-  name: Scalars['String'];
+export type QueryProxyRouteByExternalHostNameArgs = {
+  externalHostName: Scalars['String'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryMigrationByNodeIdArgs = {
+export type QueryProxyRouteByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -100,9 +114,7 @@ export enum MigrationsOrderBy {
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   CreatedTsAsc = 'CREATED_TS_ASC',
-  CreatedTsDesc = 'CREATED_TS_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+  CreatedTsDesc = 'CREATED_TS_DESC'
 }
 
 /** A condition to be used against `Migration` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -129,11 +141,9 @@ export type MigrationsConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type Migration = Node & {
+export type Migration = {
    __typename?: 'Migration';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
+  id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   createdTs?: Maybe<Scalars['Datetime']>;
 };
@@ -158,6 +168,65 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['Cursor']>;
   /** When paginating forwards, the cursor to continue. */
   endCursor?: Maybe<Scalars['Cursor']>;
+};
+
+/** Methods to use when ordering `ProxyRoute`. */
+export enum ProxyRoutesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ExternalHostNameAsc = 'EXTERNAL_HOST_NAME_ASC',
+  ExternalHostNameDesc = 'EXTERNAL_HOST_NAME_DESC',
+  InternalHostNameAsc = 'INTERNAL_HOST_NAME_ASC',
+  InternalHostNameDesc = 'INTERNAL_HOST_NAME_DESC',
+  InternalPortAsc = 'INTERNAL_PORT_ASC',
+  InternalPortDesc = 'INTERNAL_PORT_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `ProxyRoute` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ProxyRouteCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `externalHostName` field. */
+  externalHostName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `internalHostName` field. */
+  internalHostName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `internalPort` field. */
+  internalPort?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `ProxyRoute` values. */
+export type ProxyRoutesConnection = {
+   __typename?: 'ProxyRoutesConnection';
+  /** A list of `ProxyRoute` objects. */
+  nodes: Array<Maybe<ProxyRoute>>;
+  /** A list of edges which contains the `ProxyRoute` and cursor to aid in pagination. */
+  edges: Array<ProxyRoutesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ProxyRoute` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type ProxyRoute = Node & {
+   __typename?: 'ProxyRoute';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  externalHostName: Scalars['String'];
+  internalHostName: Scalars['String'];
+  internalPort: Scalars['Int'];
+};
+
+/** A `ProxyRoute` edge in the connection. */
+export type ProxyRoutesEdge = {
+   __typename?: 'ProxyRoutesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ProxyRoute` at the end of the edge. */
+  node?: Maybe<ProxyRoute>;
 };
 
 /** Methods to use when ordering `UserSession`. */
@@ -241,21 +310,22 @@ export type Mutation = {
    __typename?: 'Mutation';
   /** Creates a single `Migration`. */
   createMigration?: Maybe<CreateMigrationPayload>;
-  /** Updates a single `Migration` using its globally unique id and a patch. */
-  updateMigrationByNodeId?: Maybe<UpdateMigrationPayload>;
-  /** Updates a single `Migration` using a unique key and a patch. */
-  updateMigration?: Maybe<UpdateMigrationPayload>;
-  /** Updates a single `Migration` using a unique key and a patch. */
-  updateMigrationByName?: Maybe<UpdateMigrationPayload>;
-  /** Deletes a single `Migration` using its globally unique id. */
-  deleteMigrationByNodeId?: Maybe<DeleteMigrationPayload>;
-  /** Deletes a single `Migration` using a unique key. */
-  deleteMigration?: Maybe<DeleteMigrationPayload>;
-  /** Deletes a single `Migration` using a unique key. */
-  deleteMigrationByName?: Maybe<DeleteMigrationPayload>;
+  /** Creates a single `ProxyRoute`. */
+  createProxyRoute?: Maybe<CreateProxyRoutePayload>;
+  /** Updates a single `ProxyRoute` using its globally unique id and a patch. */
+  updateProxyRouteByNodeId?: Maybe<UpdateProxyRoutePayload>;
+  /** Updates a single `ProxyRoute` using a unique key and a patch. */
+  updateProxyRoute?: Maybe<UpdateProxyRoutePayload>;
+  /** Updates a single `ProxyRoute` using a unique key and a patch. */
+  updateProxyRouteByExternalHostName?: Maybe<UpdateProxyRoutePayload>;
+  /** Deletes a single `ProxyRoute` using its globally unique id. */
+  deleteProxyRouteByNodeId?: Maybe<DeleteProxyRoutePayload>;
+  /** Deletes a single `ProxyRoute` using a unique key. */
+  deleteProxyRoute?: Maybe<DeleteProxyRoutePayload>;
+  /** Deletes a single `ProxyRoute` using a unique key. */
+  deleteProxyRouteByExternalHostName?: Maybe<DeleteProxyRoutePayload>;
   currentUserHasRole?: Maybe<CurrentUserHasRolePayload>;
   currentUserId?: Maybe<CurrentUserIdPayload>;
-  isAdmin?: Maybe<IsAdminPayload>;
   isCurrentUser?: Maybe<IsCurrentUserPayload>;
   isLoggedIn?: Maybe<IsLoggedInPayload>;
   registerUser?: Maybe<RegisterUserPayload>;
@@ -269,38 +339,44 @@ export type MutationCreateMigrationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateMigrationByNodeIdArgs = {
-  input: UpdateMigrationByNodeIdInput;
+export type MutationCreateProxyRouteArgs = {
+  input: CreateProxyRouteInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateMigrationArgs = {
-  input: UpdateMigrationInput;
+export type MutationUpdateProxyRouteByNodeIdArgs = {
+  input: UpdateProxyRouteByNodeIdInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateMigrationByNameArgs = {
-  input: UpdateMigrationByNameInput;
+export type MutationUpdateProxyRouteArgs = {
+  input: UpdateProxyRouteInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteMigrationByNodeIdArgs = {
-  input: DeleteMigrationByNodeIdInput;
+export type MutationUpdateProxyRouteByExternalHostNameArgs = {
+  input: UpdateProxyRouteByExternalHostNameInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteMigrationArgs = {
-  input: DeleteMigrationInput;
+export type MutationDeleteProxyRouteByNodeIdArgs = {
+  input: DeleteProxyRouteByNodeIdInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteMigrationByNameArgs = {
-  input: DeleteMigrationByNameInput;
+export type MutationDeleteProxyRouteArgs = {
+  input: DeleteProxyRouteInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteProxyRouteByExternalHostNameArgs = {
+  input: DeleteProxyRouteByExternalHostNameInput;
 };
 
 
@@ -313,12 +389,6 @@ export type MutationCurrentUserHasRoleArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCurrentUserIdArgs = {
   input: CurrentUserIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationIsAdminArgs = {
-  input: IsAdminInput;
 };
 
 
@@ -373,100 +443,136 @@ export type CreateMigrationPayloadMigrationEdgeArgs = {
   orderBy?: Maybe<Array<MigrationsOrderBy>>;
 };
 
-/** All input for the `updateMigrationByNodeId` mutation. */
-export type UpdateMigrationByNodeIdInput = {
+/** All input for the create `ProxyRoute` mutation. */
+export type CreateProxyRouteInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Migration` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Migration` being updated. */
-  patch: MigrationPatch;
+  /** The `ProxyRoute` to be created by this mutation. */
+  proxyRoute: ProxyRouteInput;
 };
 
-/** Represents an update to a `Migration`. Fields that are set will be updated. */
-export type MigrationPatch = {
+/** An input for mutations affecting `ProxyRoute` */
+export type ProxyRouteInput = {
   id?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
-  createdTs?: Maybe<Scalars['Datetime']>;
+  externalHostName: Scalars['String'];
+  internalHostName: Scalars['String'];
+  internalPort: Scalars['Int'];
 };
 
-/** The output of our update `Migration` mutation. */
-export type UpdateMigrationPayload = {
-   __typename?: 'UpdateMigrationPayload';
+/** The output of our create `ProxyRoute` mutation. */
+export type CreateProxyRoutePayload = {
+   __typename?: 'CreateProxyRoutePayload';
   /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `Migration` that was updated by this mutation. */
-  migration?: Maybe<Migration>;
+  /** The `ProxyRoute` that was created by this mutation. */
+  proxyRoute?: Maybe<ProxyRoute>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `Migration`. May be used by Relay 1. */
-  migrationEdge?: Maybe<MigrationsEdge>;
+  /** An edge for our `ProxyRoute`. May be used by Relay 1. */
+  proxyRouteEdge?: Maybe<ProxyRoutesEdge>;
 };
 
 
-/** The output of our update `Migration` mutation. */
-export type UpdateMigrationPayloadMigrationEdgeArgs = {
-  orderBy?: Maybe<Array<MigrationsOrderBy>>;
+/** The output of our create `ProxyRoute` mutation. */
+export type CreateProxyRoutePayloadProxyRouteEdgeArgs = {
+  orderBy?: Maybe<Array<ProxyRoutesOrderBy>>;
 };
 
-/** All input for the `updateMigration` mutation. */
-export type UpdateMigrationInput = {
+/** All input for the `updateProxyRouteByNodeId` mutation. */
+export type UpdateProxyRouteByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `Migration` being updated. */
-  patch: MigrationPatch;
+  /** The globally unique `ID` which will identify a single `ProxyRoute` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `ProxyRoute` being updated. */
+  patch: ProxyRoutePatch;
+};
+
+/** Represents an update to a `ProxyRoute`. Fields that are set will be updated. */
+export type ProxyRoutePatch = {
+  id?: Maybe<Scalars['Int']>;
+  externalHostName?: Maybe<Scalars['String']>;
+  internalHostName?: Maybe<Scalars['String']>;
+  internalPort?: Maybe<Scalars['Int']>;
+};
+
+/** The output of our update `ProxyRoute` mutation. */
+export type UpdateProxyRoutePayload = {
+   __typename?: 'UpdateProxyRoutePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ProxyRoute` that was updated by this mutation. */
+  proxyRoute?: Maybe<ProxyRoute>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `ProxyRoute`. May be used by Relay 1. */
+  proxyRouteEdge?: Maybe<ProxyRoutesEdge>;
+};
+
+
+/** The output of our update `ProxyRoute` mutation. */
+export type UpdateProxyRoutePayloadProxyRouteEdgeArgs = {
+  orderBy?: Maybe<Array<ProxyRoutesOrderBy>>;
+};
+
+/** All input for the `updateProxyRoute` mutation. */
+export type UpdateProxyRouteInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `ProxyRoute` being updated. */
+  patch: ProxyRoutePatch;
   id: Scalars['Int'];
 };
 
-/** All input for the `updateMigrationByName` mutation. */
-export type UpdateMigrationByNameInput = {
+/** All input for the `updateProxyRouteByExternalHostName` mutation. */
+export type UpdateProxyRouteByExternalHostNameInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `Migration` being updated. */
-  patch: MigrationPatch;
-  name: Scalars['String'];
+  /** An object where the defined keys will be set on the `ProxyRoute` being updated. */
+  patch: ProxyRoutePatch;
+  externalHostName: Scalars['String'];
 };
 
-/** All input for the `deleteMigrationByNodeId` mutation. */
-export type DeleteMigrationByNodeIdInput = {
+/** All input for the `deleteProxyRouteByNodeId` mutation. */
+export type DeleteProxyRouteByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Migration` to be deleted. */
+  /** The globally unique `ID` which will identify a single `ProxyRoute` to be deleted. */
   nodeId: Scalars['ID'];
 };
 
-/** The output of our delete `Migration` mutation. */
-export type DeleteMigrationPayload = {
-   __typename?: 'DeleteMigrationPayload';
+/** The output of our delete `ProxyRoute` mutation. */
+export type DeleteProxyRoutePayload = {
+   __typename?: 'DeleteProxyRoutePayload';
   /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `Migration` that was deleted by this mutation. */
-  migration?: Maybe<Migration>;
-  deletedMigrationNodeId?: Maybe<Scalars['ID']>;
+  /** The `ProxyRoute` that was deleted by this mutation. */
+  proxyRoute?: Maybe<ProxyRoute>;
+  deletedProxyRouteNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `Migration`. May be used by Relay 1. */
-  migrationEdge?: Maybe<MigrationsEdge>;
+  /** An edge for our `ProxyRoute`. May be used by Relay 1. */
+  proxyRouteEdge?: Maybe<ProxyRoutesEdge>;
 };
 
 
-/** The output of our delete `Migration` mutation. */
-export type DeleteMigrationPayloadMigrationEdgeArgs = {
-  orderBy?: Maybe<Array<MigrationsOrderBy>>;
+/** The output of our delete `ProxyRoute` mutation. */
+export type DeleteProxyRoutePayloadProxyRouteEdgeArgs = {
+  orderBy?: Maybe<Array<ProxyRoutesOrderBy>>;
 };
 
-/** All input for the `deleteMigration` mutation. */
-export type DeleteMigrationInput = {
+/** All input for the `deleteProxyRoute` mutation. */
+export type DeleteProxyRouteInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
 };
 
-/** All input for the `deleteMigrationByName` mutation. */
-export type DeleteMigrationByNameInput = {
+/** All input for the `deleteProxyRouteByExternalHostName` mutation. */
+export type DeleteProxyRouteByExternalHostNameInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
+  externalHostName: Scalars['String'];
 };
 
 /** All input for the `currentUserHasRole` mutation. */
@@ -498,22 +604,6 @@ export type CurrentUserIdPayload = {
   /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
   clientMutationId?: Maybe<Scalars['String']>;
   integer?: Maybe<Scalars['Int']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-/** All input for the `isAdmin` mutation. */
-export type IsAdminInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-};
-
-/** The output of our `isAdmin` mutation. */
-export type IsAdminPayload = {
-   __typename?: 'IsAdminPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  boolean?: Maybe<Scalars['Boolean']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
@@ -592,14 +682,16 @@ export type Subscription = {
   node?: Maybe<Node>;
   /** Reads and enables pagination through a set of `Migration`. (live) */
   migrations?: Maybe<MigrationsConnection>;
+  /** Reads and enables pagination through a set of `ProxyRoute`. (live) */
+  proxyRoutes?: Maybe<ProxyRoutesConnection>;
   /** Reads and enables pagination through a set of `UserSession`. (live) */
   userSessions?: Maybe<UserSessionsConnection>;
   /**  (live) */
-  migration?: Maybe<Migration>;
+  proxyRoute?: Maybe<ProxyRoute>;
   /**  (live) */
-  migrationByName?: Maybe<Migration>;
-  /** Reads a single `Migration` using its globally unique `ID`. (live) */
-  migrationByNodeId?: Maybe<Migration>;
+  proxyRouteByExternalHostName?: Maybe<ProxyRoute>;
+  /** Reads a single `ProxyRoute` using its globally unique `ID`. (live) */
+  proxyRouteByNodeId?: Maybe<ProxyRoute>;
   listen: ListenPayload;
 };
 
@@ -665,6 +757,32 @@ export type SubscriptionMigrationsArgs = {
  * 
  * Event fields will run their selection set when, and only when, the specified server-side event occurs. This makes them a lot more efficient than Live Queries, but it is still recommended that you keep payloads fairly small.
  */
+export type SubscriptionProxyRoutesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ProxyRoutesOrderBy>>;
+  condition?: Maybe<ProxyRouteCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their description, they are added for each field in the `Query` type. When you subscribe to a live query field, the selection set will be evaluated and sent to the client, and then most things\* that would cause the output of the selection set to change will trigger the selection set to be re-evaluated and the results to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified server-side event occurs. This makes them a lot more efficient than Live Queries, but it is still recommended that you keep payloads fairly small.
+ */
 export type SubscriptionUserSessionsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -691,7 +809,7 @@ export type SubscriptionUserSessionsArgs = {
  * 
  * Event fields will run their selection set when, and only when, the specified server-side event occurs. This makes them a lot more efficient than Live Queries, but it is still recommended that you keep payloads fairly small.
  */
-export type SubscriptionMigrationArgs = {
+export type SubscriptionProxyRouteArgs = {
   id: Scalars['Int'];
 };
 
@@ -711,8 +829,8 @@ export type SubscriptionMigrationArgs = {
  * 
  * Event fields will run their selection set when, and only when, the specified server-side event occurs. This makes them a lot more efficient than Live Queries, but it is still recommended that you keep payloads fairly small.
  */
-export type SubscriptionMigrationByNameArgs = {
-  name: Scalars['String'];
+export type SubscriptionProxyRouteByExternalHostNameArgs = {
+  externalHostName: Scalars['String'];
 };
 
 
@@ -731,7 +849,7 @@ export type SubscriptionMigrationByNameArgs = {
  * 
  * Event fields will run their selection set when, and only when, the specified server-side event occurs. This makes them a lot more efficient than Live Queries, but it is still recommended that you keep payloads fairly small.
  */
-export type SubscriptionMigrationByNodeIdArgs = {
+export type SubscriptionProxyRouteByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -777,6 +895,20 @@ export type DashboardQuery = (
   )> }
 );
 
+export type ProxySettingsQueryVariables = {};
+
+
+export type ProxySettingsQuery = (
+  { __typename?: 'Query' }
+  & { proxyRoutes?: Maybe<(
+    { __typename?: 'ProxyRoutesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ProxyRoute' }
+      & Pick<ProxyRoute, 'id' | 'externalHostName' | 'internalHostName' | 'internalPort'>
+    )>> }
+  )> }
+);
+
 
 export const DashboardDocument = gql`
     query Dashboard {
@@ -796,4 +928,25 @@ export const DashboardComponent = (props: Omit<Urql.QueryProps<DashboardQuery, D
 
 export function useDashboardQuery(options: Omit<Urql.UseQueryArgs<DashboardQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<DashboardQuery>({ query: DashboardDocument, ...options });
+};
+export const ProxySettingsDocument = gql`
+    query ProxySettings {
+  proxyRoutes {
+    nodes {
+      id
+      externalHostName
+      internalHostName
+      internalPort
+    }
+  }
+}
+    `;
+
+export const ProxySettingsComponent = (props: Omit<Urql.QueryProps<ProxySettingsQuery, ProxySettingsQueryVariables>, 'query'> & { variables?: ProxySettingsQueryVariables }) => (
+  <Urql.Query {...props} query={ProxySettingsDocument} />
+);
+
+
+export function useProxySettingsQuery(options: Omit<Urql.UseQueryArgs<ProxySettingsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ProxySettingsQuery>({ query: ProxySettingsDocument, ...options });
 };

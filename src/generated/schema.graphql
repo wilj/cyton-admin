@@ -36,13 +36,41 @@ type Query implements Node {
     after: Cursor
 
     """The method to use when ordering `Migration`."""
-    orderBy: [MigrationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [MigrationsOrderBy!] = [NATURAL]
 
     """
     A condition to be used in determining which values should be returned by the collection.
     """
     condition: MigrationCondition
   ): MigrationsConnection
+
+  """Reads and enables pagination through a set of `ProxyRoute`."""
+  proxyRoutes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ProxyRoute`."""
+    orderBy: [ProxyRoutesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProxyRouteCondition
+  ): ProxyRoutesConnection
 
   """Reads and enables pagination through a set of `UserSession`."""
   userSessions(
@@ -71,14 +99,16 @@ type Query implements Node {
     """
     condition: UserSessionCondition
   ): UserSessionsConnection
-  migration(id: Int!): Migration
-  migrationByName(name: String!): Migration
+  proxyRoute(id: Int!): ProxyRoute
+  proxyRouteByExternalHostName(externalHostName: String!): ProxyRoute
 
-  """Reads a single `Migration` using its globally unique `ID`."""
-  migrationByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Migration`."""
+  """Reads a single `ProxyRoute` using its globally unique `ID`."""
+  proxyRouteByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `ProxyRoute`.
+    """
     nodeId: ID!
-  ): Migration
+  ): ProxyRoute
 }
 
 """An object with a globally unique `ID`."""
@@ -101,8 +131,6 @@ enum MigrationsOrderBy {
   NAME_DESC
   CREATED_TS_ASC
   CREATED_TS_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
 }
 
 """
@@ -141,12 +169,8 @@ type MigrationsConnection {
   totalCount: Int!
 }
 
-type Migration implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  id: Int!
+type Migration {
+  id: Int
   name: String
   createdTs: Datetime
 }
@@ -173,6 +197,75 @@ type PageInfo {
 
   """When paginating forwards, the cursor to continue."""
   endCursor: Cursor
+}
+
+"""Methods to use when ordering `ProxyRoute`."""
+enum ProxyRoutesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  EXTERNAL_HOST_NAME_ASC
+  EXTERNAL_HOST_NAME_DESC
+  INTERNAL_HOST_NAME_ASC
+  INTERNAL_HOST_NAME_DESC
+  INTERNAL_PORT_ASC
+  INTERNAL_PORT_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `ProxyRoute` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ProxyRouteCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `externalHostName` field."""
+  externalHostName: String
+
+  """Checks for equality with the object’s `internalHostName` field."""
+  internalHostName: String
+
+  """Checks for equality with the object’s `internalPort` field."""
+  internalPort: Int
+}
+
+"""A connection to a list of `ProxyRoute` values."""
+type ProxyRoutesConnection {
+  """A list of `ProxyRoute` objects."""
+  nodes: [ProxyRoute]!
+
+  """
+  A list of edges which contains the `ProxyRoute` and cursor to aid in pagination.
+  """
+  edges: [ProxyRoutesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ProxyRoute` you could get from the connection."""
+  totalCount: Int!
+}
+
+type ProxyRoute implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: Int!
+  externalHostName: String!
+  internalHostName: String!
+  internalPort: Int!
+}
+
+"""A `ProxyRoute` edge in the connection."""
+type ProxyRoutesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProxyRoute` at the end of the edge."""
+  node: ProxyRoute
 }
 
 """Methods to use when ordering `UserSession`."""
@@ -279,53 +372,63 @@ type Mutation {
     input: CreateMigrationInput!
   ): CreateMigrationPayload
 
-  """Updates a single `Migration` using its globally unique id and a patch."""
-  updateMigrationByNodeId(
+  """Creates a single `ProxyRoute`."""
+  createProxyRoute(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateMigrationByNodeIdInput!
-  ): UpdateMigrationPayload
+    input: CreateProxyRouteInput!
+  ): CreateProxyRoutePayload
 
-  """Updates a single `Migration` using a unique key and a patch."""
-  updateMigration(
+  """
+  Updates a single `ProxyRoute` using its globally unique id and a patch.
+  """
+  updateProxyRouteByNodeId(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateMigrationInput!
-  ): UpdateMigrationPayload
+    input: UpdateProxyRouteByNodeIdInput!
+  ): UpdateProxyRoutePayload
 
-  """Updates a single `Migration` using a unique key and a patch."""
-  updateMigrationByName(
+  """Updates a single `ProxyRoute` using a unique key and a patch."""
+  updateProxyRoute(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateMigrationByNameInput!
-  ): UpdateMigrationPayload
+    input: UpdateProxyRouteInput!
+  ): UpdateProxyRoutePayload
 
-  """Deletes a single `Migration` using its globally unique id."""
-  deleteMigrationByNodeId(
+  """Updates a single `ProxyRoute` using a unique key and a patch."""
+  updateProxyRouteByExternalHostName(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteMigrationByNodeIdInput!
-  ): DeleteMigrationPayload
+    input: UpdateProxyRouteByExternalHostNameInput!
+  ): UpdateProxyRoutePayload
 
-  """Deletes a single `Migration` using a unique key."""
-  deleteMigration(
+  """Deletes a single `ProxyRoute` using its globally unique id."""
+  deleteProxyRouteByNodeId(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteMigrationInput!
-  ): DeleteMigrationPayload
+    input: DeleteProxyRouteByNodeIdInput!
+  ): DeleteProxyRoutePayload
 
-  """Deletes a single `Migration` using a unique key."""
-  deleteMigrationByName(
+  """Deletes a single `ProxyRoute` using a unique key."""
+  deleteProxyRoute(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteMigrationByNameInput!
-  ): DeleteMigrationPayload
+    input: DeleteProxyRouteInput!
+  ): DeleteProxyRoutePayload
+
+  """Deletes a single `ProxyRoute` using a unique key."""
+  deleteProxyRouteByExternalHostName(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProxyRouteByExternalHostNameInput!
+  ): DeleteProxyRoutePayload
   currentUserHasRole(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -338,12 +441,6 @@ type Mutation {
     """
     input: CurrentUserIdInput!
   ): CurrentUserIdPayload
-  isAdmin(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: IsAdminInput!
-  ): IsAdminPayload
   isCurrentUser(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -400,125 +497,167 @@ type CreateMigrationPayload {
   """An edge for our `Migration`. May be used by Relay 1."""
   migrationEdge(
     """The method to use when ordering `Migration`."""
-    orderBy: [MigrationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [MigrationsOrderBy!] = [NATURAL]
   ): MigrationsEdge
 }
 
-"""All input for the `updateMigrationByNodeId` mutation."""
-input UpdateMigrationByNodeIdInput {
+"""All input for the create `ProxyRoute` mutation."""
+input CreateProxyRouteInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """
-  The globally unique `ID` which will identify a single `Migration` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Migration` being updated.
-  """
-  patch: MigrationPatch!
+  """The `ProxyRoute` to be created by this mutation."""
+  proxyRoute: ProxyRouteInput!
 }
 
-"""
-Represents an update to a `Migration`. Fields that are set will be updated.
-"""
-input MigrationPatch {
+"""An input for mutations affecting `ProxyRoute`"""
+input ProxyRouteInput {
   id: Int
-  name: String
-  createdTs: Datetime
+  externalHostName: String!
+  internalHostName: String!
+  internalPort: Int!
 }
 
-"""The output of our update `Migration` mutation."""
-type UpdateMigrationPayload {
+"""The output of our create `ProxyRoute` mutation."""
+type CreateProxyRoutePayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `Migration` that was updated by this mutation."""
-  migration: Migration
+  """The `ProxyRoute` that was created by this mutation."""
+  proxyRoute: ProxyRoute
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `Migration`. May be used by Relay 1."""
-  migrationEdge(
-    """The method to use when ordering `Migration`."""
-    orderBy: [MigrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): MigrationsEdge
+  """An edge for our `ProxyRoute`. May be used by Relay 1."""
+  proxyRouteEdge(
+    """The method to use when ordering `ProxyRoute`."""
+    orderBy: [ProxyRoutesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProxyRoutesEdge
 }
 
-"""All input for the `updateMigration` mutation."""
-input UpdateMigrationInput {
+"""All input for the `updateProxyRouteByNodeId` mutation."""
+input UpdateProxyRouteByNodeIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
   """
-  An object where the defined keys will be set on the `Migration` being updated.
+  The globally unique `ID` which will identify a single `ProxyRoute` to be updated.
   """
-  patch: MigrationPatch!
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `ProxyRoute` being updated.
+  """
+  patch: ProxyRoutePatch!
+}
+
+"""
+Represents an update to a `ProxyRoute`. Fields that are set will be updated.
+"""
+input ProxyRoutePatch {
+  id: Int
+  externalHostName: String
+  internalHostName: String
+  internalPort: Int
+}
+
+"""The output of our update `ProxyRoute` mutation."""
+type UpdateProxyRoutePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProxyRoute` that was updated by this mutation."""
+  proxyRoute: ProxyRoute
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProxyRoute`. May be used by Relay 1."""
+  proxyRouteEdge(
+    """The method to use when ordering `ProxyRoute`."""
+    orderBy: [ProxyRoutesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProxyRoutesEdge
+}
+
+"""All input for the `updateProxyRoute` mutation."""
+input UpdateProxyRouteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ProxyRoute` being updated.
+  """
+  patch: ProxyRoutePatch!
   id: Int!
 }
 
-"""All input for the `updateMigrationByName` mutation."""
-input UpdateMigrationByNameInput {
+"""All input for the `updateProxyRouteByExternalHostName` mutation."""
+input UpdateProxyRouteByExternalHostNameInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
   """
-  An object where the defined keys will be set on the `Migration` being updated.
+  An object where the defined keys will be set on the `ProxyRoute` being updated.
   """
-  patch: MigrationPatch!
-  name: String!
+  patch: ProxyRoutePatch!
+  externalHostName: String!
 }
 
-"""All input for the `deleteMigrationByNodeId` mutation."""
-input DeleteMigrationByNodeIdInput {
+"""All input for the `deleteProxyRouteByNodeId` mutation."""
+input DeleteProxyRouteByNodeIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
   """
-  The globally unique `ID` which will identify a single `Migration` to be deleted.
+  The globally unique `ID` which will identify a single `ProxyRoute` to be deleted.
   """
   nodeId: ID!
 }
 
-"""The output of our delete `Migration` mutation."""
-type DeleteMigrationPayload {
+"""The output of our delete `ProxyRoute` mutation."""
+type DeleteProxyRoutePayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `Migration` that was deleted by this mutation."""
-  migration: Migration
-  deletedMigrationNodeId: ID
+  """The `ProxyRoute` that was deleted by this mutation."""
+  proxyRoute: ProxyRoute
+  deletedProxyRouteNodeId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `Migration`. May be used by Relay 1."""
-  migrationEdge(
-    """The method to use when ordering `Migration`."""
-    orderBy: [MigrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): MigrationsEdge
+  """An edge for our `ProxyRoute`. May be used by Relay 1."""
+  proxyRouteEdge(
+    """The method to use when ordering `ProxyRoute`."""
+    orderBy: [ProxyRoutesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProxyRoutesEdge
 }
 
-"""All input for the `deleteMigration` mutation."""
-input DeleteMigrationInput {
+"""All input for the `deleteProxyRoute` mutation."""
+input DeleteProxyRouteInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
   """
@@ -526,13 +665,13 @@ input DeleteMigrationInput {
   id: Int!
 }
 
-"""All input for the `deleteMigrationByName` mutation."""
-input DeleteMigrationByNameInput {
+"""All input for the `deleteProxyRouteByExternalHostName` mutation."""
+input DeleteProxyRouteByExternalHostNameInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  name: String!
+  externalHostName: String!
 }
 
 """All input for the `currentUserHasRole` mutation."""
@@ -573,28 +712,6 @@ type CurrentUserIdPayload {
   """
   clientMutationId: String
   integer: Int
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `isAdmin` mutation."""
-input IsAdminInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-}
-
-"""The output of our `isAdmin` mutation."""
-type IsAdminPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  boolean: Boolean
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -721,13 +838,41 @@ type Subscription {
     after: Cursor
 
     """The method to use when ordering `Migration`."""
-    orderBy: [MigrationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [MigrationsOrderBy!] = [NATURAL]
 
     """
     A condition to be used in determining which values should be returned by the collection.
     """
     condition: MigrationCondition
   ): MigrationsConnection
+
+  """Reads and enables pagination through a set of `ProxyRoute`. (live)"""
+  proxyRoutes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ProxyRoute`."""
+    orderBy: [ProxyRoutesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProxyRouteCondition
+  ): ProxyRoutesConnection
 
   """Reads and enables pagination through a set of `UserSession`. (live)"""
   userSessions(
@@ -758,16 +903,18 @@ type Subscription {
   ): UserSessionsConnection
 
   """ (live)"""
-  migration(id: Int!): Migration
+  proxyRoute(id: Int!): ProxyRoute
 
   """ (live)"""
-  migrationByName(name: String!): Migration
+  proxyRouteByExternalHostName(externalHostName: String!): ProxyRoute
 
-  """Reads a single `Migration` using its globally unique `ID`. (live)"""
-  migrationByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Migration`."""
+  """Reads a single `ProxyRoute` using its globally unique `ID`. (live)"""
+  proxyRouteByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `ProxyRoute`.
+    """
     nodeId: ID!
-  ): Migration
+  ): ProxyRoute
   listen(topic: String!): ListenPayload!
 }
 

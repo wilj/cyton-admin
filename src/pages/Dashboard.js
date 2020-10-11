@@ -10,7 +10,6 @@ import PageTitle from '../components/Typography/PageTitle'
 import {useDashboardQuery} from '../generated/graphql'
 
 
-
 // initClient({url})
 
 function Dashboard() {

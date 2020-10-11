@@ -145,7 +145,7 @@
                     }
                   }
                 },
-                "defaultValue": "[PRIMARY_KEY_ASC]"
+                "defaultValue": "[NATURAL]"
               },
               {
                 "name": "condition",
@@ -161,6 +161,97 @@
             "type": {
               "kind": "OBJECT",
               "name": "MigrationsConnection",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "proxyRoutes",
+            "description": "Reads and enables pagination through a set of `ProxyRoute`.",
+            "args": [
+              {
+                "name": "first",
+                "description": "Only read the first `n` values of the set.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "last",
+                "description": "Only read the last `n` values of the set.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "before",
+                "description": "Read all values in the set before (above) this cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "after",
+                "description": "Read all values in the set after (below) this cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "orderBy",
+                "description": "The method to use when ordering `ProxyRoute`.",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "ProxyRoutesOrderBy",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": "[PRIMARY_KEY_ASC]"
+              },
+              {
+                "name": "condition",
+                "description": "A condition to be used in determining which values should be returned by the collection.",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "ProxyRouteCondition",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "ProxyRoutesConnection",
               "ofType": null
             },
             "isDeprecated": false,
@@ -258,7 +349,7 @@
             "deprecationReason": null
           },
           {
-            "name": "migration",
+            "name": "proxyRoute",
             "description": null,
             "args": [
               {
@@ -278,18 +369,18 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "Migration",
+              "name": "ProxyRoute",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "migrationByName",
+            "name": "proxyRouteByExternalHostName",
             "description": null,
             "args": [
               {
-                "name": "name",
+                "name": "externalHostName",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -305,19 +396,19 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "Migration",
+              "name": "ProxyRoute",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "migrationByNodeId",
-            "description": "Reads a single `Migration` using its globally unique `ID`.",
+            "name": "proxyRouteByNodeId",
+            "description": "Reads a single `ProxyRoute` using its globally unique `ID`.",
             "args": [
               {
                 "name": "nodeId",
-                "description": "The globally unique `ID` to be used in selecting a single `Migration`.",
+                "description": "The globally unique `ID` to be used in selecting a single `ProxyRoute`.",
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
@@ -332,7 +423,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "Migration",
+              "name": "ProxyRoute",
               "ofType": null
             },
             "isDeprecated": false,
@@ -413,7 +504,7 @@
           },
           {
             "kind": "OBJECT",
-            "name": "Migration",
+            "name": "ProxyRoute",
             "ofType": null
           }
         ]
@@ -474,18 +565,6 @@
           },
           {
             "name": "CREATED_TS_DESC",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "PRIMARY_KEY_ASC",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "PRIMARY_KEY_DESC",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -637,33 +716,13 @@
         "description": null,
         "fields": [
           {
-            "name": "nodeId",
-            "description": "A globally unique identifier. Can be used in various places throughout the system to identify this single value.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "id",
             "description": null,
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -694,13 +753,7 @@
           }
         ],
         "inputFields": null,
-        "interfaces": [
-          {
-            "kind": "INTERFACE",
-            "name": "Node",
-            "ofType": null
-          }
-        ],
+        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -813,6 +866,353 @@
         "fields": null,
         "inputFields": null,
         "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "ProxyRoutesOrderBy",
+        "description": "Methods to use when ordering `ProxyRoute`.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "NATURAL",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ID_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ID_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "EXTERNAL_HOST_NAME_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "EXTERNAL_HOST_NAME_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INTERNAL_HOST_NAME_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INTERNAL_HOST_NAME_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INTERNAL_PORT_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INTERNAL_PORT_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "PRIMARY_KEY_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "PRIMARY_KEY_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ProxyRouteCondition",
+        "description": "A condition to be used against `ProxyRoute` object types. All fields are tested for equality and combined with a logical ‘and.’",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "id",
+            "description": "Checks for equality with the object’s `id` field.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "externalHostName",
+            "description": "Checks for equality with the object’s `externalHostName` field.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "internalHostName",
+            "description": "Checks for equality with the object’s `internalHostName` field.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "internalPort",
+            "description": "Checks for equality with the object’s `internalPort` field.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProxyRoutesConnection",
+        "description": "A connection to a list of `ProxyRoute` values.",
+        "fields": [
+          {
+            "name": "nodes",
+            "description": "A list of `ProxyRoute` objects.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ProxyRoute",
+                  "ofType": null
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "edges",
+            "description": "A list of edges which contains the `ProxyRoute` and cursor to aid in pagination.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ProxyRoutesEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "pageInfo",
+            "description": "Information to aid in pagination.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "totalCount",
+            "description": "The count of *all* `ProxyRoute` you could get from the connection.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProxyRoute",
+        "description": null,
+        "fields": [
+          {
+            "name": "nodeId",
+            "description": "A globally unique identifier. Can be used in various places throughout the system to identify this single value.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "externalHostName",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "internalHostName",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "internalPort",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "Node",
+            "ofType": null
+          }
+        ],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProxyRoutesEdge",
+        "description": "A `ProxyRoute` edge in the connection.",
+        "fields": [
+          {
+            "name": "cursor",
+            "description": "A cursor for use in pagination.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Cursor",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "node",
+            "description": "The `ProxyRoute` at the end of the edge.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "ProxyRoute",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -1292,8 +1692,8 @@
             "deprecationReason": null
           },
           {
-            "name": "updateMigrationByNodeId",
-            "description": "Updates a single `Migration` using its globally unique id and a patch.",
+            "name": "createProxyRoute",
+            "description": "Creates a single `ProxyRoute`.",
             "args": [
               {
                 "name": "input",
@@ -1303,7 +1703,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "UpdateMigrationByNodeIdInput",
+                    "name": "CreateProxyRouteInput",
                     "ofType": null
                   }
                 },
@@ -1312,15 +1712,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "UpdateMigrationPayload",
+              "name": "CreateProxyRoutePayload",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "updateMigration",
-            "description": "Updates a single `Migration` using a unique key and a patch.",
+            "name": "updateProxyRouteByNodeId",
+            "description": "Updates a single `ProxyRoute` using its globally unique id and a patch.",
             "args": [
               {
                 "name": "input",
@@ -1330,7 +1730,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "UpdateMigrationInput",
+                    "name": "UpdateProxyRouteByNodeIdInput",
                     "ofType": null
                   }
                 },
@@ -1339,15 +1739,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "UpdateMigrationPayload",
+              "name": "UpdateProxyRoutePayload",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "updateMigrationByName",
-            "description": "Updates a single `Migration` using a unique key and a patch.",
+            "name": "updateProxyRoute",
+            "description": "Updates a single `ProxyRoute` using a unique key and a patch.",
             "args": [
               {
                 "name": "input",
@@ -1357,7 +1757,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "UpdateMigrationByNameInput",
+                    "name": "UpdateProxyRouteInput",
                     "ofType": null
                   }
                 },
@@ -1366,15 +1766,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "UpdateMigrationPayload",
+              "name": "UpdateProxyRoutePayload",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "deleteMigrationByNodeId",
-            "description": "Deletes a single `Migration` using its globally unique id.",
+            "name": "updateProxyRouteByExternalHostName",
+            "description": "Updates a single `ProxyRoute` using a unique key and a patch.",
             "args": [
               {
                 "name": "input",
@@ -1384,7 +1784,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "DeleteMigrationByNodeIdInput",
+                    "name": "UpdateProxyRouteByExternalHostNameInput",
                     "ofType": null
                   }
                 },
@@ -1393,15 +1793,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "DeleteMigrationPayload",
+              "name": "UpdateProxyRoutePayload",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "deleteMigration",
-            "description": "Deletes a single `Migration` using a unique key.",
+            "name": "deleteProxyRouteByNodeId",
+            "description": "Deletes a single `ProxyRoute` using its globally unique id.",
             "args": [
               {
                 "name": "input",
@@ -1411,7 +1811,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "DeleteMigrationInput",
+                    "name": "DeleteProxyRouteByNodeIdInput",
                     "ofType": null
                   }
                 },
@@ -1420,15 +1820,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "DeleteMigrationPayload",
+              "name": "DeleteProxyRoutePayload",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "deleteMigrationByName",
-            "description": "Deletes a single `Migration` using a unique key.",
+            "name": "deleteProxyRoute",
+            "description": "Deletes a single `ProxyRoute` using a unique key.",
             "args": [
               {
                 "name": "input",
@@ -1438,7 +1838,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "DeleteMigrationByNameInput",
+                    "name": "DeleteProxyRouteInput",
                     "ofType": null
                   }
                 },
@@ -1447,7 +1847,34 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "DeleteMigrationPayload",
+              "name": "DeleteProxyRoutePayload",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "deleteProxyRouteByExternalHostName",
+            "description": "Deletes a single `ProxyRoute` using a unique key.",
+            "args": [
+              {
+                "name": "input",
+                "description": "The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "DeleteProxyRouteByExternalHostNameInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteProxyRoutePayload",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1502,33 +1929,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "CurrentUserIdPayload",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "isAdmin",
-            "description": null,
-            "args": [
-              {
-                "name": "input",
-                "description": "The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.",
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "IsAdminInput",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null
-              }
-            ],
-            "type": {
-              "kind": "OBJECT",
-              "name": "IsAdminPayload",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1758,7 +2158,7 @@
                     }
                   }
                 },
-                "defaultValue": "[PRIMARY_KEY_ASC]"
+                "defaultValue": "[NATURAL]"
               }
             ],
             "type": {
@@ -1777,8 +2177,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "UpdateMigrationByNodeIdInput",
-        "description": "All input for the `updateMigrationByNodeId` mutation.",
+        "name": "CreateProxyRouteInput",
+        "description": "All input for the create `ProxyRoute` mutation.",
         "fields": null,
         "inputFields": [
           {
@@ -1792,28 +2192,14 @@
             "defaultValue": null
           },
           {
-            "name": "nodeId",
-            "description": "The globally unique `ID` which will identify a single `Migration` to be updated.",
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "patch",
-            "description": "An object where the defined keys will be set on the `Migration` being updated.",
+            "name": "proxyRoute",
+            "description": "The `ProxyRoute` to be created by this mutation.",
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "MigrationPatch",
+                "name": "ProxyRouteInput",
                 "ofType": null
               }
             },
@@ -1826,8 +2212,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "MigrationPatch",
-        "description": "Represents an update to a `Migration`. Fields that are set will be updated.",
+        "name": "ProxyRouteInput",
+        "description": "An input for mutations affecting `ProxyRoute`",
         "fields": null,
         "inputFields": [
           {
@@ -1841,22 +2227,44 @@
             "defaultValue": null
           },
           {
-            "name": "name",
+            "name": "externalHostName",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
             },
             "defaultValue": null
           },
           {
-            "name": "createdTs",
+            "name": "internalHostName",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "Datetime",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "internalPort",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
             },
             "defaultValue": null
           }
@@ -1867,8 +2275,8 @@
       },
       {
         "kind": "OBJECT",
-        "name": "UpdateMigrationPayload",
-        "description": "The output of our update `Migration` mutation.",
+        "name": "CreateProxyRoutePayload",
+        "description": "The output of our create `ProxyRoute` mutation.",
         "fields": [
           {
             "name": "clientMutationId",
@@ -1883,12 +2291,12 @@
             "deprecationReason": null
           },
           {
-            "name": "migration",
-            "description": "The `Migration` that was updated by this mutation.",
+            "name": "proxyRoute",
+            "description": "The `ProxyRoute` that was created by this mutation.",
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "Migration",
+              "name": "ProxyRoute",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1907,12 +2315,12 @@
             "deprecationReason": null
           },
           {
-            "name": "migrationEdge",
-            "description": "An edge for our `Migration`. May be used by Relay 1.",
+            "name": "proxyRouteEdge",
+            "description": "An edge for our `ProxyRoute`. May be used by Relay 1.",
             "args": [
               {
                 "name": "orderBy",
-                "description": "The method to use when ordering `Migration`.",
+                "description": "The method to use when ordering `ProxyRoute`.",
                 "type": {
                   "kind": "LIST",
                   "name": null,
@@ -1921,7 +2329,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "MigrationsOrderBy",
+                      "name": "ProxyRoutesOrderBy",
                       "ofType": null
                     }
                   }
@@ -1931,7 +2339,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "MigrationsEdge",
+              "name": "ProxyRoutesEdge",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1945,8 +2353,186 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "UpdateMigrationInput",
-        "description": "All input for the `updateMigration` mutation.",
+        "name": "UpdateProxyRouteByNodeIdInput",
+        "description": "All input for the `updateProxyRouteByNodeId` mutation.",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "clientMutationId",
+            "description": "An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "nodeId",
+            "description": "The globally unique `ID` which will identify a single `ProxyRoute` to be updated.",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "patch",
+            "description": "An object where the defined keys will be set on the `ProxyRoute` being updated.",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "ProxyRoutePatch",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ProxyRoutePatch",
+        "description": "Represents an update to a `ProxyRoute`. Fields that are set will be updated.",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "id",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "externalHostName",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "internalHostName",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "internalPort",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateProxyRoutePayload",
+        "description": "The output of our update `ProxyRoute` mutation.",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "description": "The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "proxyRoute",
+            "description": "The `ProxyRoute` that was updated by this mutation.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "ProxyRoute",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "query",
+            "description": "Our root query field type. Allows us to run any query from our mutation payload.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "proxyRouteEdge",
+            "description": "An edge for our `ProxyRoute`. May be used by Relay 1.",
+            "args": [
+              {
+                "name": "orderBy",
+                "description": "The method to use when ordering `ProxyRoute`.",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "ProxyRoutesOrderBy",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": "[PRIMARY_KEY_ASC]"
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "ProxyRoutesEdge",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdateProxyRouteInput",
+        "description": "All input for the `updateProxyRoute` mutation.",
         "fields": null,
         "inputFields": [
           {
@@ -1961,13 +2547,13 @@
           },
           {
             "name": "patch",
-            "description": "An object where the defined keys will be set on the `Migration` being updated.",
+            "description": "An object where the defined keys will be set on the `ProxyRoute` being updated.",
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "MigrationPatch",
+                "name": "ProxyRoutePatch",
                 "ofType": null
               }
             },
@@ -1994,8 +2580,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "UpdateMigrationByNameInput",
-        "description": "All input for the `updateMigrationByName` mutation.",
+        "name": "UpdateProxyRouteByExternalHostNameInput",
+        "description": "All input for the `updateProxyRouteByExternalHostName` mutation.",
         "fields": null,
         "inputFields": [
           {
@@ -2010,20 +2596,20 @@
           },
           {
             "name": "patch",
-            "description": "An object where the defined keys will be set on the `Migration` being updated.",
+            "description": "An object where the defined keys will be set on the `ProxyRoute` being updated.",
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "MigrationPatch",
+                "name": "ProxyRoutePatch",
                 "ofType": null
               }
             },
             "defaultValue": null
           },
           {
-            "name": "name",
+            "name": "externalHostName",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -2043,8 +2629,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "DeleteMigrationByNodeIdInput",
-        "description": "All input for the `deleteMigrationByNodeId` mutation.",
+        "name": "DeleteProxyRouteByNodeIdInput",
+        "description": "All input for the `deleteProxyRouteByNodeId` mutation.",
         "fields": null,
         "inputFields": [
           {
@@ -2059,7 +2645,7 @@
           },
           {
             "name": "nodeId",
-            "description": "The globally unique `ID` which will identify a single `Migration` to be deleted.",
+            "description": "The globally unique `ID` which will identify a single `ProxyRoute` to be deleted.",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -2078,8 +2664,8 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DeleteMigrationPayload",
-        "description": "The output of our delete `Migration` mutation.",
+        "name": "DeleteProxyRoutePayload",
+        "description": "The output of our delete `ProxyRoute` mutation.",
         "fields": [
           {
             "name": "clientMutationId",
@@ -2094,19 +2680,19 @@
             "deprecationReason": null
           },
           {
-            "name": "migration",
-            "description": "The `Migration` that was deleted by this mutation.",
+            "name": "proxyRoute",
+            "description": "The `ProxyRoute` that was deleted by this mutation.",
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "Migration",
+              "name": "ProxyRoute",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "deletedMigrationNodeId",
+            "name": "deletedProxyRouteNodeId",
             "description": null,
             "args": [],
             "type": {
@@ -2130,12 +2716,12 @@
             "deprecationReason": null
           },
           {
-            "name": "migrationEdge",
-            "description": "An edge for our `Migration`. May be used by Relay 1.",
+            "name": "proxyRouteEdge",
+            "description": "An edge for our `ProxyRoute`. May be used by Relay 1.",
             "args": [
               {
                 "name": "orderBy",
-                "description": "The method to use when ordering `Migration`.",
+                "description": "The method to use when ordering `ProxyRoute`.",
                 "type": {
                   "kind": "LIST",
                   "name": null,
@@ -2144,7 +2730,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "MigrationsOrderBy",
+                      "name": "ProxyRoutesOrderBy",
                       "ofType": null
                     }
                   }
@@ -2154,7 +2740,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "MigrationsEdge",
+              "name": "ProxyRoutesEdge",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2168,8 +2754,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "DeleteMigrationInput",
-        "description": "All input for the `deleteMigration` mutation.",
+        "name": "DeleteProxyRouteInput",
+        "description": "All input for the `deleteProxyRoute` mutation.",
         "fields": null,
         "inputFields": [
           {
@@ -2203,8 +2789,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "DeleteMigrationByNameInput",
-        "description": "All input for the `deleteMigrationByName` mutation.",
+        "name": "DeleteProxyRouteByExternalHostNameInput",
+        "description": "All input for the `deleteProxyRouteByExternalHostName` mutation.",
         "fields": null,
         "inputFields": [
           {
@@ -2218,7 +2804,7 @@
             "defaultValue": null
           },
           {
-            "name": "name",
+            "name": "externalHostName",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -2359,74 +2945,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "query",
-            "description": "Our root query field type. Allows us to run any query from our mutation payload.",
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "IsAdminInput",
-        "description": "All input for the `isAdmin` mutation.",
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "clientMutationId",
-            "description": "An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "IsAdminPayload",
-        "description": "The output of our `isAdmin` mutation.",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "description": "The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "boolean",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2802,7 +3320,7 @@
                     }
                   }
                 },
-                "defaultValue": "[PRIMARY_KEY_ASC]"
+                "defaultValue": "[NATURAL]"
               },
               {
                 "name": "condition",
@@ -2818,6 +3336,97 @@
             "type": {
               "kind": "OBJECT",
               "name": "MigrationsConnection",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "proxyRoutes",
+            "description": "Reads and enables pagination through a set of `ProxyRoute`. (live)",
+            "args": [
+              {
+                "name": "first",
+                "description": "Only read the first `n` values of the set.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "last",
+                "description": "Only read the last `n` values of the set.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "before",
+                "description": "Read all values in the set before (above) this cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "after",
+                "description": "Read all values in the set after (below) this cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Cursor",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "orderBy",
+                "description": "The method to use when ordering `ProxyRoute`.",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "ProxyRoutesOrderBy",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": "[PRIMARY_KEY_ASC]"
+              },
+              {
+                "name": "condition",
+                "description": "A condition to be used in determining which values should be returned by the collection.",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "ProxyRouteCondition",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "ProxyRoutesConnection",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2915,7 +3524,7 @@
             "deprecationReason": null
           },
           {
-            "name": "migration",
+            "name": "proxyRoute",
             "description": " (live)",
             "args": [
               {
@@ -2935,18 +3544,18 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "Migration",
+              "name": "ProxyRoute",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "migrationByName",
+            "name": "proxyRouteByExternalHostName",
             "description": " (live)",
             "args": [
               {
-                "name": "name",
+                "name": "externalHostName",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -2962,19 +3571,19 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "Migration",
+              "name": "ProxyRoute",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "migrationByNodeId",
-            "description": "Reads a single `Migration` using its globally unique `ID`. (live)",
+            "name": "proxyRouteByNodeId",
+            "description": "Reads a single `ProxyRoute` using its globally unique `ID`. (live)",
             "args": [
               {
                 "name": "nodeId",
-                "description": "The globally unique `ID` to be used in selecting a single `Migration`.",
+                "description": "The globally unique `ID` to be used in selecting a single `ProxyRoute`.",
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
@@ -2989,7 +3598,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "Migration",
+              "name": "ProxyRoute",
               "ofType": null
             },
             "isDeprecated": false,

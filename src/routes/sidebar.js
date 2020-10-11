@@ -12,6 +12,11 @@ const routes = [
     name: 'Dashboard', // name that appear in Sidebar
   },
   {
+    path: '/app/proxy', 
+    icon: 'ViewListIcon', 
+    name: 'Proxy Settings', 
+  },
+  {
     path: '/app/forms',
     icon: 'FormsIcon',
     name: 'Forms',
