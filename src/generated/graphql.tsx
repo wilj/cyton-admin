@@ -881,6 +881,22 @@ export type ListenPayload = {
   relatedNodeId?: Maybe<Scalars['ID']>;
 };
 
+export type AddProxyRouteMutationVariables = {
+  input: CreateProxyRouteInput;
+};
+
+
+export type AddProxyRouteMutation = (
+  { __typename?: 'Mutation' }
+  & { createProxyRoute?: Maybe<(
+    { __typename?: 'CreateProxyRoutePayload' }
+    & { proxyRoute?: Maybe<(
+      { __typename?: 'ProxyRoute' }
+      & Pick<ProxyRoute, 'id'>
+    )> }
+  )> }
+);
+
 export type DashboardQueryVariables = {};
 
 
@@ -910,6 +926,24 @@ export type ProxySettingsQuery = (
 );
 
 
+export const AddProxyRouteDocument = gql`
+    mutation AddProxyRoute($input: CreateProxyRouteInput!) {
+  createProxyRoute(input: $input) {
+    proxyRoute {
+      id
+    }
+  }
+}
+    `;
+
+export const AddProxyRouteComponent = (props: Omit<Urql.MutationProps<AddProxyRouteMutation, AddProxyRouteMutationVariables>, 'query'> & { variables?: AddProxyRouteMutationVariables }) => (
+  <Urql.Mutation {...props} query={AddProxyRouteDocument} />
+);
+
+
+export function useAddProxyRouteMutation() {
+  return Urql.useMutation<AddProxyRouteMutation, AddProxyRouteMutationVariables>(AddProxyRouteDocument);
+};
 export const DashboardDocument = gql`
     query Dashboard {
   migrations(orderBy: CREATED_TS_ASC) {

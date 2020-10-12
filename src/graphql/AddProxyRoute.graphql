@@ -1,0 +1,8 @@
+mutation AddProxyRoute($input: CreateProxyRouteInput!) {
+  createProxyRoute(input: $input) {
+    proxyRoute {
+      id
+    }
+  }
+}
+
