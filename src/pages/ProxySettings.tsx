@@ -111,28 +111,32 @@ function ProxySettingsList() {
 type AddRouteFormData = {
     externalHost: string
     internalHost: string
-    internalPort: number
+    internalPort: string
 }
 
 function AddProxyRoute() {
-    const { register, setValue, handleSubmit, errors } = useForm<AddRouteFormData>()
+    const { register, setValue, handleSubmit, errors, formState: {isSubmitted}} = useForm<AddRouteFormData>()
     const [addRouteResult, addRoute] = useAddProxyRouteMutation()
 
-    
     const onSubmit = handleSubmit(async ({ externalHost, internalHost, internalPort }) => {
-        const result = await addRoute({
+        const proxyRoute = {
+            externalHostName: externalHost,
+            internalHostName: internalHost,
+            internalPort: parseInt(internalPort),
+        }
+        const { data } = await addRoute({
             input: {
-                proxyRoute: {
-                    externalHostName: externalHost,
-                    internalHostName: internalHost,
-                    internalPort
-                },
+                proxyRoute,
             },
         })
-        alert(`addRoute result: ${JSON.stringify(result)}`)
+        console.log(`addRoute result: ${JSON.stringify(data)}`)
     })
 
-    console.log(`addRouteResult: ${JSON.stringify(addRouteResult)}`)
+    if (addRouteResult.data?.createProxyRoute?.proxyRoute?.id) {
+        return <Redirect to="/app/proxy" />
+    }
+
+    const isValid = (key: keyof AddRouteFormData) => isSubmitted ? !errors[key] : undefined
 
     return (
         <div className="px-4 py-3 mt-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
@@ -143,8 +147,16 @@ function AddProxyRoute() {
                         name="externalHost"
                         className="mt-1"
                         placeholder="example.com"
-                        ref={register({ required: true })}
+                        ref={register({
+                            required: true,
+                            pattern: /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/
+                            
+                        })}
+                        valid={isValid(`externalHost`)}
                     />
+                    <HelperText valid={isValid(`externalHost`)}>
+                      External host is required and must be a valid hostname
+                    </HelperText>
                 </Label>
                 <Label className="mt-4">
                     <span>Internal host</span>
@@ -153,7 +165,11 @@ function AddProxyRoute() {
                         className="mt-1"
                         placeholder="my-api-container"
                         ref={register({ required: true })}
+                        valid={isValid(`internalHost`)}
                     />
+                    <HelperText valid={isValid(`internalHost`)}>
+                      Internal host is required, and is usually a container name
+                    </HelperText>
                 </Label>
                 <Label className="mt-4">
                     <span>Internal port</span>
@@ -162,8 +178,17 @@ function AddProxyRoute() {
                         className="mt-1"
                         placeholder="3000"
                         type="number"
-                        ref={register({ required: true, min: 1, max: 65536 })}
+                        ref={register({
+                            required: true,
+                            min: 1,
+                            max: 65536,
+                        })}
+                        valid={isValid(`internalPort`)}
                     />
+                    <HelperText valid={isValid(`internalPort`)}>
+                        Internal port is required, and must be between 1 and 65536
+                    </HelperText>
+                    
                 </Label>
                 <div className="mt-2 space-x-2 space-y-2">
                     <Button type="submit">Add route</Button>
