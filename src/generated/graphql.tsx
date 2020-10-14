@@ -911,6 +911,22 @@ export type DashboardQuery = (
   )> }
 );
 
+export type DeleteProxyRouteMutationVariables = {
+  input: DeleteProxyRouteInput;
+};
+
+
+export type DeleteProxyRouteMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteProxyRoute?: Maybe<(
+    { __typename?: 'DeleteProxyRoutePayload' }
+    & { proxyRoute?: Maybe<(
+      { __typename?: 'ProxyRoute' }
+      & Pick<ProxyRoute, 'id'>
+    )> }
+  )> }
+);
+
 export type ProxySettingsQueryVariables = {};
 
 
@@ -962,6 +978,24 @@ export const DashboardComponent = (props: Omit<Urql.QueryProps<DashboardQuery, D
 
 export function useDashboardQuery(options: Omit<Urql.UseQueryArgs<DashboardQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<DashboardQuery>({ query: DashboardDocument, ...options });
+};
+export const DeleteProxyRouteDocument = gql`
+    mutation DeleteProxyRoute($input: DeleteProxyRouteInput!) {
+  deleteProxyRoute(input: $input) {
+    proxyRoute {
+      id
+    }
+  }
+}
+    `;
+
+export const DeleteProxyRouteComponent = (props: Omit<Urql.MutationProps<DeleteProxyRouteMutation, DeleteProxyRouteMutationVariables>, 'query'> & { variables?: DeleteProxyRouteMutationVariables }) => (
+  <Urql.Mutation {...props} query={DeleteProxyRouteDocument} />
+);
+
+
+export function useDeleteProxyRouteMutation() {
+  return Urql.useMutation<DeleteProxyRouteMutation, DeleteProxyRouteMutationVariables>(DeleteProxyRouteDocument);
 };
 export const ProxySettingsDocument = gql`
     query ProxySettings {

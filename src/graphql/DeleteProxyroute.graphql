@@ -1,0 +1,8 @@
+mutation DeleteProxyRoute($input: DeleteProxyRouteInput!) {
+  deleteProxyRoute(input: $input) {
+    proxyRoute {
+      id
+    }
+  }
+}
+

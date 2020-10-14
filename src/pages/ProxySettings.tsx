@@ -19,13 +19,14 @@ import { Link, Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import { useForm } from 'react-hook-form'
-import { useMutation } from 'urql'
-import { useProxySettingsQuery, useAddProxyRouteMutation } from '../generated/graphql'
+import { useProxySettingsQuery, useAddProxyRouteMutation, useDeleteProxyRouteMutation } from '../generated/graphql'
+import {TrashIcon} from '../icons'
 
 function ProxySettingsList() {
     const [page, setPage] = useState(1)
 
-    const [result] = useProxySettingsQuery()
+    const [result, refreshResults] = useProxySettingsQuery()
+    const [deleteProxyRouteResult, deleteProxyRoute] = useDeleteProxyRouteMutation()
 
     const { data, fetching, error } = result
 
@@ -49,6 +50,10 @@ function ProxySettingsList() {
 
     const rows = routes?.slice((page - 1) * resultsPerPage, page * resultsPerPage)
 
+    const deleteRoute = async (id: number) => {
+      await deleteProxyRoute({input: {id}})
+      await refreshResults()
+    }
     return (
         <>
             <PageTitle>Proxy Settings</PageTitle>
@@ -60,6 +65,7 @@ function ProxySettingsList() {
                             <TableCell>External Host</TableCell>
                             <TableCell>Internal Host</TableCell>
                             <TableCell>Internal Port</TableCell>
+                            <TableCell></TableCell>
                         </tr>
                     </TableHeader>
                     <TableBody>
@@ -74,6 +80,9 @@ function ProxySettingsList() {
                                     </TableCell>
                                     <TableCell>
                                         <span className="text-sm">{route?.internalPort}</span>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button icon={TrashIcon} layout="link" aria-label="Delete proxy route" onClick={() => deleteRoute(route?.id || 0)}/>
                                     </TableCell>
                                 </TableRow>
                             ))
