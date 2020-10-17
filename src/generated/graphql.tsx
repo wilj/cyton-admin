@@ -660,8 +660,7 @@ export type RegisterUserPayload = {
 
 export type ReloadProxyPayload = {
    __typename?: 'ReloadProxyPayload';
-  success?: Maybe<Scalars['Boolean']>;
-  claims?: Maybe<Scalars['String']>;
+  response?: Maybe<Scalars['String']>;
   query?: Maybe<Query>;
 };
 
@@ -956,7 +955,7 @@ export type ReloadProxyMutation = (
   { __typename: 'Mutation' }
   & { reloadProxy?: Maybe<(
     { __typename?: 'ReloadProxyPayload' }
-    & Pick<ReloadProxyPayload, 'claims'>
+    & Pick<ReloadProxyPayload, 'response'>
   )> }
 );
 
@@ -1041,7 +1040,7 @@ export const ReloadProxyDocument = gql`
     mutation ReloadProxy {
   __typename
   reloadProxy {
-    claims
+    response
   }
 }
     `;

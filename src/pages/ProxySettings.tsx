@@ -29,9 +29,10 @@ import {TrashIcon} from '../icons'
 export type AlertProps = {
     message: string
     onClose: () => void
+    title?: string
 }
 export function Alert(props: AlertProps) {
-    const {message, onClose} = props
+    const {message, onClose, title} = props
     const [isModalOpen, setModalOpen] = useState(true)
     const closeModal = () => {
       setModalOpen(false)
@@ -39,7 +40,7 @@ export function Alert(props: AlertProps) {
     }
 
     return <Modal isOpen={isModalOpen} onClose={closeModal}>
-    <ModalHeader>Modal header</ModalHeader>
+    <ModalHeader>{title || ``}</ModalHeader>
     <ModalBody>{message}</ModalBody>
     <ModalFooter>
       <Button className="w-full sm:w-auto" layout="outline" onClick={closeModal}>
@@ -63,7 +64,7 @@ function ProxySettingsList() {
     const onClickReloadProxy = async () => {
       const {data, error} = await reloadProxy()
       if (error) throw error
-      setReloadedMessage(JSON.stringify(data?.reloadProxy?.claims))
+      setReloadedMessage(JSON.stringify(data?.reloadProxy?.response))
     }
     
     const onProxyReloadAlertClose = () => {
