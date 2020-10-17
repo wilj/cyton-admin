@@ -3204,12 +3204,12 @@
         "description": null,
         "fields": [
           {
-            "name": "response",
+            "name": "reloaded",
             "description": null,
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,

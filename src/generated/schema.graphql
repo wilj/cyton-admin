@@ -788,7 +788,7 @@ type RegisterUserPayload {
 }
 
 type ReloadProxyPayload {
-  response: String
+  reloaded: Boolean
   query: Query
 }
 

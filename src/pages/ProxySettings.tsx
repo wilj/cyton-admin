@@ -23,8 +23,14 @@ import { Link, Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import { useForm } from 'react-hook-form'
-import { useProxySettingsQuery, useAddProxyRouteMutation, useDeleteProxyRouteMutation, useReloadProxyMutation } from '../generated/graphql'
-import {TrashIcon} from '../icons'
+import {
+    useProxySettingsQuery,
+    useAddProxyRouteMutation,
+    useDeleteProxyRouteMutation,
+    useReloadProxyMutation,
+} from '../generated/graphql'
+import { TrashIcon } from '../icons'
+import LoadingIcon from '../components/LoadingIcon'
 
 export type AlertProps = {
     message: string
@@ -32,43 +38,46 @@ export type AlertProps = {
     title?: string
 }
 export function Alert(props: AlertProps) {
-    const {message, onClose, title} = props
+    const { message, onClose, title } = props
     const [isModalOpen, setModalOpen] = useState(true)
     const closeModal = () => {
-      setModalOpen(false)
-      onClose()
+        setModalOpen(false)
+        onClose()
     }
 
-    return <Modal isOpen={isModalOpen} onClose={closeModal}>
-    <ModalHeader>{title || ``}</ModalHeader>
-    <ModalBody>{message}</ModalBody>
-    <ModalFooter>
-      <Button className="w-full sm:w-auto" layout="outline" onClick={closeModal}>
-        OK
-      </Button>
-    </ModalFooter>
-  </Modal>
+    return (
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+            <ModalHeader>{title || ``}</ModalHeader>
+            <ModalBody>{message}</ModalBody>
+            <ModalFooter>
+                <Button className="w-full sm:w-auto" layout="outline" onClick={closeModal}>
+                    OK
+                </Button>
+            </ModalFooter>
+        </Modal>
+    )
 }
 
 function ProxySettingsList() {
     const [page, setPage] = useState(1)
 
     const [{ data, fetching, error }, refreshResults] = useProxySettingsQuery()
-    
+
     const [deleteProxyRouteResult, deleteProxyRoute] = useDeleteProxyRouteMutation()
 
-    const [reloadProxyResult, reloadProxy] = useReloadProxyMutation()
+    const [{ fetching: reloadingProxy }, reloadProxy] = useReloadProxyMutation()
 
     const [reloadedMessage, setReloadedMessage] = useState(``)
 
     const onClickReloadProxy = async () => {
-      const {data, error} = await reloadProxy()
-      if (error) throw error
-      setReloadedMessage(JSON.stringify(data?.reloadProxy?.response))
+        const { data, error } = await reloadProxy()
+        if (error) throw error
+        const reloaded = data?.reloadProxy?.reloaded || false
+        if (!reloaded) setReloadedMessage(`There was an error reloading the proxy`)
     }
-    
+
     const onProxyReloadAlertClose = () => {
-      setReloadedMessage(``)
+        setReloadedMessage(``)
     }
 
     const routes = data?.proxyRoutes?.nodes
@@ -92,8 +101,8 @@ function ProxySettingsList() {
     const rows = routes?.slice((page - 1) * resultsPerPage, page * resultsPerPage)
 
     const deleteRoute = async (id: number) => {
-      await deleteProxyRoute({input: {id}})
-      await refreshResults()
+        await deleteProxyRoute({ input: { id } })
+        await refreshResults()
     }
     return (
         <>
@@ -123,7 +132,12 @@ function ProxySettingsList() {
                                         <span className="text-sm">{route?.internalPort}</span>
                                     </TableCell>
                                     <TableCell>
-                                        <Button icon={TrashIcon} layout="link" aria-label="Delete proxy route" onClick={() => deleteRoute(route?.id || 0)}/>
+                                        <Button
+                                            icon={TrashIcon}
+                                            layout="link"
+                                            aria-label="Delete proxy route"
+                                            onClick={() => deleteRoute(route?.id || 0)}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -150,7 +164,15 @@ function ProxySettingsList() {
                                 </span>
                             </Button>
                         </Link>
-                        <Button onClick={onClickReloadProxy}>Reload</Button>
+
+                        {reloadingProxy ? (
+                            <Button disabled>
+                                Reloading...&nbsp;&nbsp;
+                                <LoadingIcon />
+                            </Button>
+                        ) : (
+                            <Button onClick={onClickReloadProxy}>Reload</Button>
+                        )}
                         {reloadedMessage && <Alert message={reloadedMessage} onClose={onProxyReloadAlertClose} />}
                     </span>
                 </TableFooter>
@@ -166,7 +188,13 @@ type AddRouteFormData = {
 }
 
 function AddProxyRoute() {
-    const { register, setValue, handleSubmit, errors, formState: {isSubmitted}} = useForm<AddRouteFormData>()
+    const {
+        register,
+        setValue,
+        handleSubmit,
+        errors,
+        formState: { isSubmitted },
+    } = useForm<AddRouteFormData>()
     const [addRouteResult, addRoute] = useAddProxyRouteMutation()
 
     const onSubmit = handleSubmit(async ({ externalHost, internalHost, internalPort }) => {
@@ -187,7 +215,7 @@ function AddProxyRoute() {
         return <Redirect to="/app/proxy" />
     }
 
-    const isValid = (key: keyof AddRouteFormData) => isSubmitted ? !errors[key] : undefined
+    const isValid = (key: keyof AddRouteFormData) => (isSubmitted ? !errors[key] : undefined)
 
     return (
         <div className="px-4 py-3 mt-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
@@ -200,13 +228,12 @@ function AddProxyRoute() {
                         placeholder="example.com"
                         ref={register({
                             required: true,
-                            pattern: /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/
-                            
+                            pattern: /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/,
                         })}
                         valid={isValid(`externalHost`)}
                     />
                     <HelperText valid={isValid(`externalHost`)}>
-                      External host is required and must be a valid hostname
+                        External host is required and must be a valid hostname
                     </HelperText>
                 </Label>
                 <Label className="mt-4">
@@ -219,7 +246,7 @@ function AddProxyRoute() {
                         valid={isValid(`internalHost`)}
                     />
                     <HelperText valid={isValid(`internalHost`)}>
-                      Internal host is required, and is usually a container name
+                        Internal host is required, and is usually a container name
                     </HelperText>
                 </Label>
                 <Label className="mt-4">
@@ -239,7 +266,6 @@ function AddProxyRoute() {
                     <HelperText valid={isValid(`internalPort`)}>
                         Internal port is required, and must be between 1 and 65536
                     </HelperText>
-                    
                 </Label>
                 <div className="mt-2 space-x-2 space-y-2">
                     <Button type="submit">Add route</Button>
