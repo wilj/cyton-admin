@@ -459,6 +459,7 @@ type Mutation {
     """
     input: RegisterUserInput!
   ): RegisterUserPayload
+  reloadProxy: ReloadProxyPayload
 }
 
 """All input for the create `Migration` mutation."""
@@ -783,6 +784,12 @@ type RegisterUserPayload {
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
+  query: Query
+}
+
+type ReloadProxyPayload {
+  success: Boolean
+  claims: String
   query: Query
 }
 

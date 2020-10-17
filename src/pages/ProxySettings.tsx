@@ -13,22 +13,62 @@ import {
     Label,
     Select,
     Textarea,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
 } from '@windmill/react-ui'
 import React, { useEffect, useState } from 'react'
 import { Link, Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import { useForm } from 'react-hook-form'
-import { useProxySettingsQuery, useAddProxyRouteMutation, useDeleteProxyRouteMutation } from '../generated/graphql'
+import { useProxySettingsQuery, useAddProxyRouteMutation, useDeleteProxyRouteMutation, useReloadProxyMutation } from '../generated/graphql'
 import {TrashIcon} from '../icons'
+
+export type AlertProps = {
+    message: string
+    onClose: () => void
+}
+export function Alert(props: AlertProps) {
+    const {message, onClose} = props
+    const [isModalOpen, setModalOpen] = useState(true)
+    const closeModal = () => {
+      setModalOpen(false)
+      onClose()
+    }
+
+    return <Modal isOpen={isModalOpen} onClose={closeModal}>
+    <ModalHeader>Modal header</ModalHeader>
+    <ModalBody>{message}</ModalBody>
+    <ModalFooter>
+      <Button className="w-full sm:w-auto" layout="outline" onClick={closeModal}>
+        OK
+      </Button>
+    </ModalFooter>
+  </Modal>
+}
 
 function ProxySettingsList() {
     const [page, setPage] = useState(1)
 
-    const [result, refreshResults] = useProxySettingsQuery()
+    const [{ data, fetching, error }, refreshResults] = useProxySettingsQuery()
+    
     const [deleteProxyRouteResult, deleteProxyRoute] = useDeleteProxyRouteMutation()
 
-    const { data, fetching, error } = result
+    const [reloadProxyResult, reloadProxy] = useReloadProxyMutation()
+
+    const [reloadedMessage, setReloadedMessage] = useState(``)
+
+    const onClickReloadProxy = async () => {
+      const {data, error} = await reloadProxy()
+      if (error) throw error
+      setReloadedMessage(JSON.stringify(data?.reloadProxy?.claims))
+    }
+    
+    const onProxyReloadAlertClose = () => {
+      setReloadedMessage(``)
+    }
 
     const routes = data?.proxyRoutes?.nodes
 
@@ -109,7 +149,8 @@ function ProxySettingsList() {
                                 </span>
                             </Button>
                         </Link>
-                        <Button>Reload</Button>
+                        <Button onClick={onClickReloadProxy}>Reload</Button>
+                        {reloadedMessage && <Alert message={reloadedMessage} onClose={onProxyReloadAlertClose} />}
                     </span>
                 </TableFooter>
             </TableContainer>

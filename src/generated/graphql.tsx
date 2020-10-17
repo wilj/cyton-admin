@@ -329,6 +329,7 @@ export type Mutation = {
   isCurrentUser?: Maybe<IsCurrentUserPayload>;
   isLoggedIn?: Maybe<IsLoggedInPayload>;
   registerUser?: Maybe<RegisterUserPayload>;
+  reloadProxy?: Maybe<ReloadProxyPayload>;
 };
 
 
@@ -657,6 +658,13 @@ export type RegisterUserPayload = {
   query?: Maybe<Query>;
 };
 
+export type ReloadProxyPayload = {
+   __typename?: 'ReloadProxyPayload';
+  success?: Maybe<Scalars['Boolean']>;
+  claims?: Maybe<Scalars['String']>;
+  query?: Maybe<Query>;
+};
+
 /**
  * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
  * 
@@ -941,6 +949,17 @@ export type ProxySettingsQuery = (
   )> }
 );
 
+export type ReloadProxyMutationVariables = {};
+
+
+export type ReloadProxyMutation = (
+  { __typename: 'Mutation' }
+  & { reloadProxy?: Maybe<(
+    { __typename?: 'ReloadProxyPayload' }
+    & Pick<ReloadProxyPayload, 'claims'>
+  )> }
+);
+
 
 export const AddProxyRouteDocument = gql`
     mutation AddProxyRoute($input: CreateProxyRouteInput!) {
@@ -1017,4 +1036,21 @@ export const ProxySettingsComponent = (props: Omit<Urql.QueryProps<ProxySettings
 
 export function useProxySettingsQuery(options: Omit<Urql.UseQueryArgs<ProxySettingsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<ProxySettingsQuery>({ query: ProxySettingsDocument, ...options });
+};
+export const ReloadProxyDocument = gql`
+    mutation ReloadProxy {
+  __typename
+  reloadProxy {
+    claims
+  }
+}
+    `;
+
+export const ReloadProxyComponent = (props: Omit<Urql.MutationProps<ReloadProxyMutation, ReloadProxyMutationVariables>, 'query'> & { variables?: ReloadProxyMutationVariables }) => (
+  <Urql.Mutation {...props} query={ReloadProxyDocument} />
+);
+
+
+export function useReloadProxyMutation() {
+  return Urql.useMutation<ReloadProxyMutation, ReloadProxyMutationVariables>(ReloadProxyDocument);
 };
