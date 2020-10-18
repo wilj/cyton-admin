@@ -17,6 +17,11 @@ const routes = [
     name: 'Proxy Settings', 
   },
   {
+    path: '/app/projectgroups', 
+    icon: 'ViewListIcon', 
+    name: 'Project Groups', 
+  },
+  {
     path: '/app/forms',
     icon: 'FormsIcon',
     name: 'Forms',

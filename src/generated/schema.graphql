@@ -44,6 +44,90 @@ type Query implements Node {
     condition: MigrationCondition
   ): MigrationsConnection
 
+  """Reads and enables pagination through a set of `ProjectGroupMember`."""
+  projectGroupMembers(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ProjectGroupMember`."""
+    orderBy: [ProjectGroupMembersOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectGroupMemberCondition
+  ): ProjectGroupMembersConnection
+
+  """Reads and enables pagination through a set of `ProjectGroup`."""
+  projectGroups(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ProjectGroup`."""
+    orderBy: [ProjectGroupsOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectGroupCondition
+  ): ProjectGroupsConnection
+
+  """Reads and enables pagination through a set of `Project`."""
+  projects(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectsOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectCondition
+  ): ProjectsConnection
+
   """Reads and enables pagination through a set of `ProxyRoute`."""
   proxyRoutes(
     """Only read the first `n` values of the set."""
@@ -71,6 +155,34 @@ type Query implements Node {
     """
     condition: ProxyRouteCondition
   ): ProxyRoutesConnection
+
+  """Reads and enables pagination through a set of `UserId`."""
+  userIds(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `UserId`."""
+    orderBy: [UserIdsOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserIdCondition
+  ): UserIdsConnection
 
   """Reads and enables pagination through a set of `UserSession`."""
   userSessions(
@@ -199,6 +311,284 @@ type PageInfo {
   endCursor: Cursor
 }
 
+"""Methods to use when ordering `ProjectGroupMember`."""
+enum ProjectGroupMembersOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  PROJECT_GROUP_ID_ASC
+  PROJECT_GROUP_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  ROLE_ASC
+  ROLE_DESC
+  CREATED_TS_ASC
+  CREATED_TS_DESC
+}
+
+"""
+A condition to be used against `ProjectGroupMember` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ProjectGroupMemberCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `projectGroupId` field."""
+  projectGroupId: Int
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: Int
+
+  """Checks for equality with the object’s `role` field."""
+  role: ProjectGroupMemberRole
+
+  """Checks for equality with the object’s `createdTs` field."""
+  createdTs: Datetime
+}
+
+enum ProjectGroupMemberRole {
+  ADMIN
+  DEVELOPER
+}
+
+"""A connection to a list of `ProjectGroupMember` values."""
+type ProjectGroupMembersConnection {
+  """A list of `ProjectGroupMember` objects."""
+  nodes: [ProjectGroupMember]!
+
+  """
+  A list of edges which contains the `ProjectGroupMember` and cursor to aid in pagination.
+  """
+  edges: [ProjectGroupMembersEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `ProjectGroupMember` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type ProjectGroupMember {
+  id: Int
+  projectGroupId: Int
+  userId: Int
+  role: ProjectGroupMemberRole
+  createdTs: Datetime
+
+  """
+  Reads a single `ProjectGroup` that is related to this `ProjectGroupMember`.
+  """
+  projectGroup: ProjectGroup
+}
+
+type ProjectGroup {
+  id: Int
+  name: String
+  description: String
+  baseDomain: String
+  createdTs: Datetime
+
+  """Reads and enables pagination through a set of `ProjectGroupMember`."""
+  projectGroupMembers(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ProjectGroupMember`."""
+    orderBy: [ProjectGroupMembersOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectGroupMemberCondition
+  ): ProjectGroupMembersConnection!
+
+  """Reads and enables pagination through a set of `Project`."""
+  projects(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectsOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectCondition
+  ): ProjectsConnection!
+}
+
+"""Methods to use when ordering `Project`."""
+enum ProjectsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  PROJECT_GROUP_ID_ASC
+  PROJECT_GROUP_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  CREATED_TS_ASC
+  CREATED_TS_DESC
+}
+
+"""
+A condition to be used against `Project` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ProjectCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `projectGroupId` field."""
+  projectGroupId: Int
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `createdTs` field."""
+  createdTs: Datetime
+}
+
+"""A connection to a list of `Project` values."""
+type ProjectsConnection {
+  """A list of `Project` objects."""
+  nodes: [Project]!
+
+  """
+  A list of edges which contains the `Project` and cursor to aid in pagination.
+  """
+  edges: [ProjectsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Project` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Project {
+  id: Int
+  projectGroupId: Int
+  name: String
+  description: String
+  createdTs: Datetime
+
+  """Reads a single `ProjectGroup` that is related to this `Project`."""
+  projectGroup: ProjectGroup
+}
+
+"""A `Project` edge in the connection."""
+type ProjectsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Project` at the end of the edge."""
+  node: Project
+}
+
+"""A `ProjectGroupMember` edge in the connection."""
+type ProjectGroupMembersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProjectGroupMember` at the end of the edge."""
+  node: ProjectGroupMember
+}
+
+"""Methods to use when ordering `ProjectGroup`."""
+enum ProjectGroupsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  BASE_DOMAIN_ASC
+  BASE_DOMAIN_DESC
+  CREATED_TS_ASC
+  CREATED_TS_DESC
+}
+
+"""
+A condition to be used against `ProjectGroup` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ProjectGroupCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `baseDomain` field."""
+  baseDomain: String
+
+  """Checks for equality with the object’s `createdTs` field."""
+  createdTs: Datetime
+}
+
+"""A connection to a list of `ProjectGroup` values."""
+type ProjectGroupsConnection {
+  """A list of `ProjectGroup` objects."""
+  nodes: [ProjectGroup]!
+
+  """
+  A list of edges which contains the `ProjectGroup` and cursor to aid in pagination.
+  """
+  edges: [ProjectGroupsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ProjectGroup` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `ProjectGroup` edge in the connection."""
+type ProjectGroupsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProjectGroup` at the end of the edge."""
+  node: ProjectGroup
+}
+
 """Methods to use when ordering `ProxyRoute`."""
 enum ProxyRoutesOrderBy {
   NATURAL
@@ -266,6 +656,57 @@ type ProxyRoutesEdge {
 
   """The `ProxyRoute` at the end of the edge."""
   node: ProxyRoute
+}
+
+"""Methods to use when ordering `UserId`."""
+enum UserIdsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  PREFERRED_USERNAME_ASC
+  PREFERRED_USERNAME_DESC
+}
+
+"""
+A condition to be used against `UserId` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input UserIdCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `preferredUsername` field."""
+  preferredUsername: String
+}
+
+"""A connection to a list of `UserId` values."""
+type UserIdsConnection {
+  """A list of `UserId` objects."""
+  nodes: [UserId]!
+
+  """
+  A list of edges which contains the `UserId` and cursor to aid in pagination.
+  """
+  edges: [UserIdsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `UserId` you could get from the connection."""
+  totalCount: Int!
+}
+
+type UserId {
+  id: Int
+  preferredUsername: String
+}
+
+"""A `UserId` edge in the connection."""
+type UserIdsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `UserId` at the end of the edge."""
+  node: UserId
 }
 
 """Methods to use when ordering `UserSession`."""
@@ -372,6 +813,30 @@ type Mutation {
     input: CreateMigrationInput!
   ): CreateMigrationPayload
 
+  """Creates a single `ProjectGroupMember`."""
+  createProjectGroupMember(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectGroupMemberInput!
+  ): CreateProjectGroupMemberPayload
+
+  """Creates a single `ProjectGroup`."""
+  createProjectGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectGroupInput!
+  ): CreateProjectGroupPayload
+
+  """Creates a single `Project`."""
+  createProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectInput!
+  ): CreateProjectPayload
+
   """Creates a single `ProxyRoute`."""
   createProxyRoute(
     """
@@ -379,6 +844,14 @@ type Mutation {
     """
     input: CreateProxyRouteInput!
   ): CreateProxyRoutePayload
+
+  """Creates a single `UserId`."""
+  createUserId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserIdInput!
+  ): CreateUserIdPayload
 
   """
   Updates a single `ProxyRoute` using its globally unique id and a patch.
@@ -460,6 +933,18 @@ type Mutation {
     input: RegisterUserInput!
   ): RegisterUserPayload
   reloadProxy: ReloadProxyPayload
+  defineProjectGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DefineProjectGroupInput!
+  ): DefineProjectGroupPayload
+  initProjectGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: InitProjectGroupInput!
+  ): InitProjectGroupPayload
 }
 
 """All input for the create `Migration` mutation."""
@@ -502,6 +987,140 @@ type CreateMigrationPayload {
   ): MigrationsEdge
 }
 
+"""All input for the create `ProjectGroupMember` mutation."""
+input CreateProjectGroupMemberInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ProjectGroupMember` to be created by this mutation."""
+  projectGroupMember: ProjectGroupMemberInput!
+}
+
+"""An input for mutations affecting `ProjectGroupMember`"""
+input ProjectGroupMemberInput {
+  id: Int
+  projectGroupId: Int
+  userId: Int
+  role: ProjectGroupMemberRole
+  createdTs: Datetime
+}
+
+"""The output of our create `ProjectGroupMember` mutation."""
+type CreateProjectGroupMemberPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectGroupMember` that was created by this mutation."""
+  projectGroupMember: ProjectGroupMember
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `ProjectGroup` that is related to this `ProjectGroupMember`.
+  """
+  projectGroup: ProjectGroup
+
+  """An edge for our `ProjectGroupMember`. May be used by Relay 1."""
+  projectGroupMemberEdge(
+    """The method to use when ordering `ProjectGroupMember`."""
+    orderBy: [ProjectGroupMembersOrderBy!] = [NATURAL]
+  ): ProjectGroupMembersEdge
+}
+
+"""All input for the create `ProjectGroup` mutation."""
+input CreateProjectGroupInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ProjectGroup` to be created by this mutation."""
+  projectGroup: ProjectGroupInput!
+}
+
+"""An input for mutations affecting `ProjectGroup`"""
+input ProjectGroupInput {
+  id: Int
+  name: String
+  description: String
+  baseDomain: String
+  createdTs: Datetime
+}
+
+"""The output of our create `ProjectGroup` mutation."""
+type CreateProjectGroupPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectGroup` that was created by this mutation."""
+  projectGroup: ProjectGroup
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectGroup`. May be used by Relay 1."""
+  projectGroupEdge(
+    """The method to use when ordering `ProjectGroup`."""
+    orderBy: [ProjectGroupsOrderBy!] = [NATURAL]
+  ): ProjectGroupsEdge
+}
+
+"""All input for the create `Project` mutation."""
+input CreateProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Project` to be created by this mutation."""
+  project: ProjectInput!
+}
+
+"""An input for mutations affecting `Project`"""
+input ProjectInput {
+  id: Int
+  projectGroupId: Int
+  name: String
+  description: String
+  createdTs: Datetime
+}
+
+"""The output of our create `Project` mutation."""
+type CreateProjectPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Project` that was created by this mutation."""
+  project: Project
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `ProjectGroup` that is related to this `Project`."""
+  projectGroup: ProjectGroup
+
+  """An edge for our `Project`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectsOrderBy!] = [NATURAL]
+  ): ProjectsEdge
+}
+
 """All input for the create `ProxyRoute` mutation."""
 input CreateProxyRouteInput {
   """
@@ -541,6 +1160,45 @@ type CreateProxyRoutePayload {
     """The method to use when ordering `ProxyRoute`."""
     orderBy: [ProxyRoutesOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProxyRoutesEdge
+}
+
+"""All input for the create `UserId` mutation."""
+input CreateUserIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `UserId` to be created by this mutation."""
+  userId: UserIdInput!
+}
+
+"""An input for mutations affecting `UserId`"""
+input UserIdInput {
+  id: Int
+  preferredUsername: String
+}
+
+"""The output of our create `UserId` mutation."""
+type CreateUserIdPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `UserId` that was created by this mutation."""
+  userId: UserId
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `UserId`. May be used by Relay 1."""
+  userIdEdge(
+    """The method to use when ordering `UserId`."""
+    orderBy: [UserIdsOrderBy!] = [NATURAL]
+  ): UserIdsEdge
 }
 
 """All input for the `updateProxyRouteByNodeId` mutation."""
@@ -792,6 +1450,28 @@ type ReloadProxyPayload {
   query: Query
 }
 
+input DefineProjectGroupInput {
+  name: String!
+  baseDomain: String!
+  description: String
+}
+
+type DefineProjectGroupPayload {
+  projectGroupId: Int!
+  query: Query
+}
+
+input InitProjectGroupInput {
+  projectGroupId: Int!
+  adminAccountName: String!
+  adminInitialPassword: String!
+}
+
+type InitProjectGroupPayload {
+  status: String!
+  query: Query
+}
+
 """
 The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
 
@@ -852,6 +1532,92 @@ type Subscription {
     condition: MigrationCondition
   ): MigrationsConnection
 
+  """
+  Reads and enables pagination through a set of `ProjectGroupMember`. (live)
+  """
+  projectGroupMembers(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ProjectGroupMember`."""
+    orderBy: [ProjectGroupMembersOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectGroupMemberCondition
+  ): ProjectGroupMembersConnection
+
+  """Reads and enables pagination through a set of `ProjectGroup`. (live)"""
+  projectGroups(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ProjectGroup`."""
+    orderBy: [ProjectGroupsOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectGroupCondition
+  ): ProjectGroupsConnection
+
+  """Reads and enables pagination through a set of `Project`. (live)"""
+  projects(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectsOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectCondition
+  ): ProjectsConnection
+
   """Reads and enables pagination through a set of `ProxyRoute`. (live)"""
   proxyRoutes(
     """Only read the first `n` values of the set."""
@@ -879,6 +1645,34 @@ type Subscription {
     """
     condition: ProxyRouteCondition
   ): ProxyRoutesConnection
+
+  """Reads and enables pagination through a set of `UserId`. (live)"""
+  userIds(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `UserId`."""
+    orderBy: [UserIdsOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserIdCondition
+  ): UserIdsConnection
 
   """Reads and enables pagination through a set of `UserSession`. (live)"""
   userSessions(

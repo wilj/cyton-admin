@@ -11,6 +11,7 @@ const Tables = lazy(() => import('../pages/Tables'))
 const Page404 = lazy(() => import('../pages/404'))
 const Blank = lazy(() => import('../pages/Blank'))
 const ProxySettings = lazy(() => import('../pages/ProxySettings'))
+const ProjectGroups = lazy(() => import('../pages/ProjectGroups'))
 
 /**
  * ⚠ These are internal routes!
@@ -30,6 +31,10 @@ const routes = [
   {
     path: '/proxy',
     component: ProxySettings,
+  },
+  {
+    path: '/projectgroups',
+    component: ProjectGroups,
   },
   {
     path: '/forms',

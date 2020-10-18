@@ -1,0 +1,25 @@
+query ProjectGroupList {
+  __typename
+  projectGroups {
+    nodes {
+      id
+      name
+      baseDomain
+      description
+      projects {
+        nodes {
+          id
+          name
+          description
+        }
+      }
+      projectGroupMembers {
+        nodes {
+          id
+          userId
+          role
+        }
+      }
+    }
+  }
+}

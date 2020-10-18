@@ -31,32 +31,8 @@ import {
 } from '../generated/graphql'
 import { TrashIcon } from '../icons'
 import LoadingIcon from '../components/LoadingIcon'
+import Alert from '../components/Alert'
 
-export type AlertProps = {
-    message: string
-    onClose: () => void
-    title?: string
-}
-export function Alert(props: AlertProps) {
-    const { message, onClose, title } = props
-    const [isModalOpen, setModalOpen] = useState(true)
-    const closeModal = () => {
-        setModalOpen(false)
-        onClose()
-    }
-
-    return (
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-            <ModalHeader>{title || ``}</ModalHeader>
-            <ModalBody>{message}</ModalBody>
-            <ModalFooter>
-                <Button className="w-full sm:w-auto" layout="outline" onClick={closeModal}>
-                    OK
-                </Button>
-            </ModalFooter>
-        </Modal>
-    )
-}
 
 function ProxySettingsList() {
     const [page, setPage] = useState(1)
