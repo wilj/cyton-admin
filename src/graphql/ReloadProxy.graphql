@@ -1,6 +1,0 @@
-mutation ReloadProxy {
-  __typename
-  reloadProxy {
-    reloaded
-  }
-}

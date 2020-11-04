@@ -1,5 +1,0 @@
-mutation DefineProjectGroup($input: DefineProjectGroupInput!) {
-  defineProjectGroup(input: $input) {
-      projectGroupId
-  }
-}

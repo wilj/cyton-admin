@@ -1618,6 +1618,18 @@
             "deprecationReason": null
           },
           {
+            "name": "status",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "ProjectGroupStatus",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdTs",
             "description": null,
             "args": [],
@@ -1823,6 +1835,29 @@
         "inputFields": null,
         "interfaces": [],
         "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "ProjectGroupStatus",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "STARTING",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "STARTED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
         "possibleTypes": null
       },
       {
@@ -2266,6 +2301,18 @@
             "deprecationReason": null
           },
           {
+            "name": "STATUS_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "STATUS_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "CREATED_TS_ASC",
             "description": null,
             "isDeprecated": false,
@@ -2322,6 +2369,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "status",
+            "description": "Checks for equality with the object’s `status` field.",
+            "type": {
+              "kind": "ENUM",
+              "name": "ProjectGroupStatus",
               "ofType": null
             },
             "defaultValue": null
@@ -3947,45 +4004,6 @@
             "deprecationReason": null
           },
           {
-            "name": "reloadProxy",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "ReloadProxyPayload",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "defineProjectGroup",
-            "description": null,
-            "args": [
-              {
-                "name": "input",
-                "description": "The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.",
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "DefineProjectGroupInput",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null
-              }
-            ],
-            "type": {
-              "kind": "OBJECT",
-              "name": "DefineProjectGroupPayload",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "initProjectGroup",
             "description": null,
             "args": [
@@ -4007,6 +4025,33 @@
             "type": {
               "kind": "OBJECT",
               "name": "InitProjectGroupPayload",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "startProjectGroup",
+            "description": null,
+            "args": [
+              {
+                "name": "input",
+                "description": "The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "StartProjectGroupInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "StartProjectGroupPayload",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4435,6 +4480,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "status",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "ProjectGroupStatus",
               "ofType": null
             },
             "defaultValue": null
@@ -5874,43 +5929,8 @@
         "possibleTypes": null
       },
       {
-        "kind": "OBJECT",
-        "name": "ReloadProxyPayload",
-        "description": null,
-        "fields": [
-          {
-            "name": "reloaded",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "query",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "INPUT_OBJECT",
-        "name": "DefineProjectGroupInput",
+        "name": "InitProjectGroupInput",
         "description": null,
         "fields": null,
         "inputFields": [
@@ -5951,6 +5971,62 @@
               "ofType": null
             },
             "defaultValue": null
+          },
+          {
+            "name": "adminAccountName",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "adminInitialPassword",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "adminFirstName",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "adminLastName",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
           }
         ],
         "interfaces": null,
@@ -5959,7 +6035,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DefineProjectGroupPayload",
+        "name": "InitProjectGroupPayload",
         "description": null,
         "fields": [
           {
@@ -5998,7 +6074,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "InitProjectGroupInput",
+        "name": "StartProjectGroupInput",
         "description": null,
         "fields": null,
         "inputFields": [
@@ -6015,34 +6091,6 @@
               }
             },
             "defaultValue": null
-          },
-          {
-            "name": "adminAccountName",
-            "description": null,
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "adminInitialPassword",
-            "description": null,
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "defaultValue": null
           }
         ],
         "interfaces": null,
@@ -6051,7 +6099,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "InitProjectGroupPayload",
+        "name": "StartProjectGroupPayload",
         "description": null,
         "fields": [
           {

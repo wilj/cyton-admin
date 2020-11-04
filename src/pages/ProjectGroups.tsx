@@ -18,20 +18,28 @@ import {
     ModalBody,
     ModalFooter,
 } from '@windmill/react-ui'
-import React, { useEffect, useState } from 'react'
-import { Link, Switch, Route, Redirect, useLocation } from 'react-router-dom'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Link, Switch, Route, Redirect, useLocation, useParams } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import { useForm } from 'react-hook-form'
 import {
+    ProjectGroup,
     useProjectGroupListQuery,
-    useDefineProjectGroupMutation,
     useInitProjectGroupMutation,
+    useStartProjectGroupMutation,
 } from '../generated/graphql'
 import { TrashIcon } from '../icons'
 import LoadingIcon from '../components/LoadingIcon'
 import Alert from '../components/Alert'
 
+function LinkSpan(props: any) {
+    console.log(`STATUS IS ${props.row.status}`)
+    if (props.row.status === `STARTED`) {
+        return <Link to={`/app/projectgroups/${props.row.id}`}>{props.children}</Link>
+    }
+    return <span className="text-sm">{props.children}</span>
+}
 function ProjectGroupList() {
     const [page, setPage] = useState(1)
 
@@ -66,6 +74,7 @@ function ProjectGroupList() {
                         <tr>
                             <TableCell>Group Name</TableCell>
                             <TableCell>Base Domain</TableCell>
+                            <TableCell>Status</TableCell>
                         </tr>
                     </TableHeader>
                     <TableBody>
@@ -73,10 +82,13 @@ function ProjectGroupList() {
                             pageRows.map((row, i) => (
                                 <TableRow key={i}>
                                     <TableCell>
-                                        <span className="text-sm">{row?.name}</span>
+                                        <LinkSpan row={row}>{row?.name}</LinkSpan>
                                     </TableCell>
                                     <TableCell>
-                                        <span className="text-sm">{row?.baseDomain}</span>
+                                        <LinkSpan row={row}>{row?.baseDomain}</LinkSpan>
+                                    </TableCell>
+                                    <TableCell>
+                                        <LinkSpan row={row}>{row?.status}</LinkSpan>
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -116,6 +128,8 @@ type AddProjectGroupFormData = {
     description: string
     adminAccountName: string
     adminInitialPassword: string
+    adminFirstName: string
+    adminLastName: string
 }
 
 function AddProjectGroup() {
@@ -132,34 +146,51 @@ function AddProjectGroup() {
     // TODO FIXME add cyton env vars like baseDomain to cyton hook or something
     const hostDomain = `.home.cyton.org`
 
-    const [{ fetching: defineFetching }, defineProjectGroup] = useDefineProjectGroupMutation()
     const [{ fetching: initFetching, data: initProjectGroupData }, initProjectGroup] = useInitProjectGroupMutation()
+    const [{ fetching: startFetching, data: startProjectGroupData }, startProjectGroup] = useStartProjectGroupMutation()
 
-    const createIsRunning = defineFetching || initFetching
+    const createIsRunning = initFetching || startFetching
+    const [created, setCreated] = useState(false)
 
-    const onSubmit = handleSubmit(async ({ name, subdomain, description, adminAccountName, adminInitialPassword }) => {
-        const baseDomain = subdomain + hostDomain
-        const { data: defineData } = await defineProjectGroup({
-            input: {
-                name,
-                baseDomain,
-                description,
-            },
-        })
-        console.log(`defineProjectGroup result`, defineData)
+    const onSubmit = handleSubmit(
+        async ({
+            name,
+            subdomain,
+            description,
+            adminAccountName,
+            adminInitialPassword,
+            adminFirstName,
+            adminLastName,
+        }) => {
+            const baseDomain = subdomain + hostDomain
+            const { data: initData } = await initProjectGroup({
+                input: {
+                    name,
+                    baseDomain,
+                    description,
+                    adminAccountName,
+                    adminInitialPassword,
+                    adminFirstName,
+                    adminLastName,
+                },
+            })
+            console.log(`initProjectGroup result`, initData)
 
-        const projectGroupId = defineData?.defineProjectGroup?.projectGroupId
-        if (!projectGroupId) {
-            throw `defineProjectGroup did not return a projectGroupId`
+            const projectGroupId = initData?.initProjectGroup?.projectGroupId
+            if (!projectGroupId) {
+                throw new Error(`initProjectGroup did not return a projectGroupId`)
+            }
+
+            const { data: startData } = await startProjectGroup({ input: { projectGroupId } })
+            console.log(`startProjectGroup result`, startData)
+            const starting = startData?.startProjectGroup?.status === `starting`
+            if (starting) {
+                setCreated(starting)
+            }
         }
+    )
 
-        const { data: initData } = await initProjectGroup({
-            input: { projectGroupId, adminAccountName, adminInitialPassword },
-        })
-        console.log(`initProjectGroup result`, initData)
-    })
-
-    if (initProjectGroupData?.initProjectGroup?.status) {
+    if (created) {
         return <Redirect to="/app/projectgroups" />
     }
 
@@ -207,7 +238,7 @@ function AddProjectGroup() {
                     />
                 </Label>
                 <Label className="mt-4">
-                    <span>Admin account name</span>
+                    <span>Admin account username</span>
                     <Input
                         name="adminAccountName"
                         className="mt-1"
@@ -237,6 +268,36 @@ function AddProjectGroup() {
                         The initial password for the admin account
                     </HelperText>
                 </Label>
+                <Label className="mt-4">
+                    <span>Admin first name</span>
+                    <Input
+                        name="adminFirstName"
+                        className="mt-1"
+                        placeholder="First Name"
+                        ref={register({
+                            required: true,
+                        })}
+                        valid={isValid(`adminFirstName`)}
+                    />
+                    <HelperText valid={isValid(`adminFirstName`)}>
+                        The project group administrator's first name
+                    </HelperText>
+                </Label>
+                <Label className="mt-4">
+                    <span>Admin first name</span>
+                    <Input
+                        name="adminLastName"
+                        className="mt-1"
+                        placeholder="Last Name"
+                        ref={register({
+                            required: true,
+                        })}
+                        valid={isValid(`adminLastName`)}
+                    />
+                    <HelperText valid={isValid(`adminFirstName`)}>
+                        The project group administrator's first name
+                    </HelperText>
+                </Label>
                 <div className="mt-2 space-x-2 space-y-2">
                     {createIsRunning ? (
                         <>
@@ -262,10 +323,16 @@ function AddProjectGroup() {
     )
 }
 
+function ProjectGroupDetail() {
+    const { id } = useParams()
+    return <PageTitle>Project Group Detail: {id}</PageTitle>
+}
+
 function ProjectGroups() {
     return (
         <Switch>
             <Route path={`/app/projectgroups/add`} component={AddProjectGroup} />
+            <Route path={`/app/projectgroups/:id`} component={ProjectGroupDetail} />
             <Route component={ProjectGroupList} />
         </Switch>
     )

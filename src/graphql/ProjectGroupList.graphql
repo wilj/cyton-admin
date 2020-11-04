@@ -6,6 +6,7 @@ query ProjectGroupList {
       name
       baseDomain
       description
+      status
       projects {
         nodes {
           id

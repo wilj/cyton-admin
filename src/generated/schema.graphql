@@ -388,6 +388,7 @@ type ProjectGroup {
   name: String
   description: String
   baseDomain: String
+  status: ProjectGroupStatus
   createdTs: Datetime
 
   """Reads and enables pagination through a set of `ProjectGroupMember`."""
@@ -445,6 +446,11 @@ type ProjectGroup {
     """
     condition: ProjectCondition
   ): ProjectsConnection!
+}
+
+enum ProjectGroupStatus {
+  STARTING
+  STARTED
 }
 
 """Methods to use when ordering `Project`."""
@@ -539,6 +545,8 @@ enum ProjectGroupsOrderBy {
   DESCRIPTION_DESC
   BASE_DOMAIN_ASC
   BASE_DOMAIN_DESC
+  STATUS_ASC
+  STATUS_DESC
   CREATED_TS_ASC
   CREATED_TS_DESC
 }
@@ -558,6 +566,9 @@ input ProjectGroupCondition {
 
   """Checks for equality with the object’s `baseDomain` field."""
   baseDomain: String
+
+  """Checks for equality with the object’s `status` field."""
+  status: ProjectGroupStatus
 
   """Checks for equality with the object’s `createdTs` field."""
   createdTs: Datetime
@@ -932,19 +943,18 @@ type Mutation {
     """
     input: RegisterUserInput!
   ): RegisterUserPayload
-  reloadProxy: ReloadProxyPayload
-  defineProjectGroup(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DefineProjectGroupInput!
-  ): DefineProjectGroupPayload
   initProjectGroup(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: InitProjectGroupInput!
   ): InitProjectGroupPayload
+  startProjectGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: StartProjectGroupInput!
+  ): StartProjectGroupPayload
 }
 
 """All input for the create `Migration` mutation."""
@@ -1051,6 +1061,7 @@ input ProjectGroupInput {
   name: String
   description: String
   baseDomain: String
+  status: ProjectGroupStatus
   createdTs: Datetime
 }
 
@@ -1445,29 +1456,26 @@ type RegisterUserPayload {
   query: Query
 }
 
-type ReloadProxyPayload {
-  reloaded: Boolean
-  query: Query
-}
-
-input DefineProjectGroupInput {
+input InitProjectGroupInput {
   name: String!
   baseDomain: String!
   description: String
+  adminAccountName: String!
+  adminInitialPassword: String!
+  adminFirstName: String!
+  adminLastName: String!
 }
 
-type DefineProjectGroupPayload {
+type InitProjectGroupPayload {
   projectGroupId: Int!
   query: Query
 }
 
-input InitProjectGroupInput {
+input StartProjectGroupInput {
   projectGroupId: Int!
-  adminAccountName: String!
-  adminInitialPassword: String!
 }
 
-type InitProjectGroupPayload {
+type StartProjectGroupPayload {
   status: String!
   query: Query
 }

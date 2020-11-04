@@ -290,6 +290,7 @@ export type ProjectGroup = {
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   baseDomain?: Maybe<Scalars['String']>;
+  status?: Maybe<ProjectGroupStatus>;
   createdTs?: Maybe<Scalars['Datetime']>;
   /** Reads and enables pagination through a set of `ProjectGroupMember`. */
   projectGroupMembers: ProjectGroupMembersConnection;
@@ -318,6 +319,11 @@ export type ProjectGroupProjectsArgs = {
   orderBy?: Maybe<Array<ProjectsOrderBy>>;
   condition?: Maybe<ProjectCondition>;
 };
+
+export enum ProjectGroupStatus {
+  Starting = 'STARTING',
+  Started = 'STARTED'
+}
 
 /** Methods to use when ordering `Project`. */
 export enum ProjectsOrderBy {
@@ -401,6 +407,8 @@ export enum ProjectGroupsOrderBy {
   DescriptionDesc = 'DESCRIPTION_DESC',
   BaseDomainAsc = 'BASE_DOMAIN_ASC',
   BaseDomainDesc = 'BASE_DOMAIN_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
   CreatedTsAsc = 'CREATED_TS_ASC',
   CreatedTsDesc = 'CREATED_TS_DESC'
 }
@@ -415,6 +423,8 @@ export type ProjectGroupCondition = {
   description?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `baseDomain` field. */
   baseDomain?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: Maybe<ProjectGroupStatus>;
   /** Checks for equality with the object’s `createdTs` field. */
   createdTs?: Maybe<Scalars['Datetime']>;
 };
@@ -653,9 +663,8 @@ export type Mutation = {
   isCurrentUser?: Maybe<IsCurrentUserPayload>;
   isLoggedIn?: Maybe<IsLoggedInPayload>;
   registerUser?: Maybe<RegisterUserPayload>;
-  reloadProxy?: Maybe<ReloadProxyPayload>;
-  defineProjectGroup?: Maybe<DefineProjectGroupPayload>;
   initProjectGroup?: Maybe<InitProjectGroupPayload>;
+  startProjectGroup?: Maybe<StartProjectGroupPayload>;
 };
 
 
@@ -762,14 +771,14 @@ export type MutationRegisterUserArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDefineProjectGroupArgs = {
-  input: DefineProjectGroupInput;
+export type MutationInitProjectGroupArgs = {
+  input: InitProjectGroupInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationInitProjectGroupArgs = {
-  input: InitProjectGroupInput;
+export type MutationStartProjectGroupArgs = {
+  input: StartProjectGroupInput;
 };
 
 /** All input for the create `Migration` mutation. */
@@ -858,6 +867,7 @@ export type ProjectGroupInput = {
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   baseDomain?: Maybe<Scalars['String']>;
+  status?: Maybe<ProjectGroupStatus>;
   createdTs?: Maybe<Scalars['Datetime']>;
 };
 
@@ -1165,32 +1175,28 @@ export type RegisterUserPayload = {
   query?: Maybe<Query>;
 };
 
-export type ReloadProxyPayload = {
-   __typename?: 'ReloadProxyPayload';
-  reloaded?: Maybe<Scalars['Boolean']>;
-  query?: Maybe<Query>;
-};
-
-export type DefineProjectGroupInput = {
+export type InitProjectGroupInput = {
   name: Scalars['String'];
   baseDomain: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-};
-
-export type DefineProjectGroupPayload = {
-   __typename?: 'DefineProjectGroupPayload';
-  projectGroupId: Scalars['Int'];
-  query?: Maybe<Query>;
-};
-
-export type InitProjectGroupInput = {
-  projectGroupId: Scalars['Int'];
   adminAccountName: Scalars['String'];
   adminInitialPassword: Scalars['String'];
+  adminFirstName: Scalars['String'];
+  adminLastName: Scalars['String'];
 };
 
 export type InitProjectGroupPayload = {
    __typename?: 'InitProjectGroupPayload';
+  projectGroupId: Scalars['Int'];
+  query?: Maybe<Query>;
+};
+
+export type StartProjectGroupInput = {
+  projectGroupId: Scalars['Int'];
+};
+
+export type StartProjectGroupPayload = {
+   __typename?: 'StartProjectGroupPayload';
   status: Scalars['String'];
   query?: Maybe<Query>;
 };
@@ -1561,19 +1567,6 @@ export type DashboardQuery = (
   )> }
 );
 
-export type DefineProjectGroupMutationVariables = {
-  input: DefineProjectGroupInput;
-};
-
-
-export type DefineProjectGroupMutation = (
-  { __typename?: 'Mutation' }
-  & { defineProjectGroup?: Maybe<(
-    { __typename?: 'DefineProjectGroupPayload' }
-    & Pick<DefineProjectGroupPayload, 'projectGroupId'>
-  )> }
-);
-
 export type DeleteProxyRouteMutationVariables = {
   input: DeleteProxyRouteInput;
 };
@@ -1599,7 +1592,7 @@ export type InitProjectGroupMutation = (
   { __typename?: 'Mutation' }
   & { initProjectGroup?: Maybe<(
     { __typename?: 'InitProjectGroupPayload' }
-    & Pick<InitProjectGroupPayload, 'status'>
+    & Pick<InitProjectGroupPayload, 'projectGroupId'>
   )> }
 );
 
@@ -1612,7 +1605,7 @@ export type ProjectGroupListQuery = (
     { __typename?: 'ProjectGroupsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ProjectGroup' }
-      & Pick<ProjectGroup, 'id' | 'name' | 'baseDomain' | 'description'>
+      & Pick<ProjectGroup, 'id' | 'name' | 'baseDomain' | 'description' | 'status'>
       & { projects: (
         { __typename?: 'ProjectsConnection' }
         & { nodes: Array<Maybe<(
@@ -1644,14 +1637,16 @@ export type ProxySettingsQuery = (
   )> }
 );
 
-export type ReloadProxyMutationVariables = {};
+export type StartProjectGroupMutationVariables = {
+  input: StartProjectGroupInput;
+};
 
 
-export type ReloadProxyMutation = (
-  { __typename: 'Mutation' }
-  & { reloadProxy?: Maybe<(
-    { __typename?: 'ReloadProxyPayload' }
-    & Pick<ReloadProxyPayload, 'reloaded'>
+export type StartProjectGroupMutation = (
+  { __typename?: 'Mutation' }
+  & { startProjectGroup?: Maybe<(
+    { __typename?: 'StartProjectGroupPayload' }
+    & Pick<StartProjectGroupPayload, 'status'>
   )> }
 );
 
@@ -1693,22 +1688,6 @@ export const DashboardComponent = (props: Omit<Urql.QueryProps<DashboardQuery, D
 export function useDashboardQuery(options: Omit<Urql.UseQueryArgs<DashboardQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<DashboardQuery>({ query: DashboardDocument, ...options });
 };
-export const DefineProjectGroupDocument = gql`
-    mutation DefineProjectGroup($input: DefineProjectGroupInput!) {
-  defineProjectGroup(input: $input) {
-    projectGroupId
-  }
-}
-    `;
-
-export const DefineProjectGroupComponent = (props: Omit<Urql.MutationProps<DefineProjectGroupMutation, DefineProjectGroupMutationVariables>, 'query'> & { variables?: DefineProjectGroupMutationVariables }) => (
-  <Urql.Mutation {...props} query={DefineProjectGroupDocument} />
-);
-
-
-export function useDefineProjectGroupMutation() {
-  return Urql.useMutation<DefineProjectGroupMutation, DefineProjectGroupMutationVariables>(DefineProjectGroupDocument);
-};
 export const DeleteProxyRouteDocument = gql`
     mutation DeleteProxyRoute($input: DeleteProxyRouteInput!) {
   deleteProxyRoute(input: $input) {
@@ -1730,7 +1709,7 @@ export function useDeleteProxyRouteMutation() {
 export const InitProjectGroupDocument = gql`
     mutation InitProjectGroup($input: InitProjectGroupInput!) {
   initProjectGroup(input: $input) {
-    status
+    projectGroupId
   }
 }
     `;
@@ -1752,6 +1731,7 @@ export const ProjectGroupListDocument = gql`
       name
       baseDomain
       description
+      status
       projects {
         nodes {
           id
@@ -1800,20 +1780,19 @@ export const ProxySettingsComponent = (props: Omit<Urql.QueryProps<ProxySettings
 export function useProxySettingsQuery(options: Omit<Urql.UseQueryArgs<ProxySettingsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<ProxySettingsQuery>({ query: ProxySettingsDocument, ...options });
 };
-export const ReloadProxyDocument = gql`
-    mutation ReloadProxy {
-  __typename
-  reloadProxy {
-    reloaded
+export const StartProjectGroupDocument = gql`
+    mutation StartProjectGroup($input: StartProjectGroupInput!) {
+  startProjectGroup(input: $input) {
+    status
   }
 }
     `;
 
-export const ReloadProxyComponent = (props: Omit<Urql.MutationProps<ReloadProxyMutation, ReloadProxyMutationVariables>, 'query'> & { variables?: ReloadProxyMutationVariables }) => (
-  <Urql.Mutation {...props} query={ReloadProxyDocument} />
+export const StartProjectGroupComponent = (props: Omit<Urql.MutationProps<StartProjectGroupMutation, StartProjectGroupMutationVariables>, 'query'> & { variables?: StartProjectGroupMutationVariables }) => (
+  <Urql.Mutation {...props} query={StartProjectGroupDocument} />
 );
 
 
-export function useReloadProxyMutation() {
-  return Urql.useMutation<ReloadProxyMutation, ReloadProxyMutationVariables>(ReloadProxyDocument);
+export function useStartProjectGroupMutation() {
+  return Urql.useMutation<StartProjectGroupMutation, StartProjectGroupMutationVariables>(StartProjectGroupDocument);
 };

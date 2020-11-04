@@ -26,8 +26,7 @@ import { useForm } from 'react-hook-form'
 import {
     useProxySettingsQuery,
     useAddProxyRouteMutation,
-    useDeleteProxyRouteMutation,
-    useReloadProxyMutation,
+    useDeleteProxyRouteMutation
 } from '../generated/graphql'
 import { TrashIcon } from '../icons'
 import LoadingIcon from '../components/LoadingIcon'
@@ -40,22 +39,7 @@ function ProxySettingsList() {
     const [{ data, fetching, error }, refreshResults] = useProxySettingsQuery()
 
     const [deleteProxyRouteResult, deleteProxyRoute] = useDeleteProxyRouteMutation()
-
-    const [{ fetching: reloadingProxy }, reloadProxy] = useReloadProxyMutation()
-
-    const [reloadedMessage, setReloadedMessage] = useState(``)
-
-    const onClickReloadProxy = async () => {
-        const { data, error } = await reloadProxy()
-        if (error) throw error
-        const reloaded = data?.reloadProxy?.reloaded || false
-        if (!reloaded) setReloadedMessage(`There was an error reloading the proxy`)
-    }
-
-    const onProxyReloadAlertClose = () => {
-        setReloadedMessage(``)
-    }
-
+    
     const routes = data?.proxyRoutes?.nodes
 
     // pagination setup
@@ -140,16 +124,6 @@ function ProxySettingsList() {
                                 </span>
                             </Button>
                         </Link>
-
-                        {reloadingProxy ? (
-                            <Button disabled>
-                                Reloading...&nbsp;&nbsp;
-                                <LoadingIcon />
-                            </Button>
-                        ) : (
-                            <Button onClick={onClickReloadProxy}>Reload</Button>
-                        )}
-                        {reloadedMessage && <Alert message={reloadedMessage} onClose={onProxyReloadAlertClose} />}
                     </span>
                 </TableFooter>
             </TableContainer>

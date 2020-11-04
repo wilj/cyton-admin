@@ -1,0 +1,5 @@
+mutation StartProjectGroup($input: StartProjectGroupInput!) {
+  startProjectGroup(input: $input) {
+    status
+  }
+}

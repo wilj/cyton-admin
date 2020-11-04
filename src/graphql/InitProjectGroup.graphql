@@ -1,5 +1,5 @@
 mutation InitProjectGroup($input: InitProjectGroupInput!) {
   initProjectGroup(input: $input) {
-    status      
+    projectGroupId      
   }
 }
